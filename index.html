@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>曉明115 多元入學分享查詢</title>
+<style>
+:root{
+  --pine:#8E5A9E; --pine-dk:#6B3F7D; --lily:#FDF8FB; --celadon:#F5E9F3;
+  --ink:#3A2C3F; --mut:#8A7590; --line:#EBD9E8;
+  --gold:#C9A227; --silver:#8E979F; --bronze:#B0793F; --plus:#C4699B; --good:#B58BC0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"PingFang TC","Noto Sans TC",-apple-system,"Microsoft JhengHei",sans-serif;
+  background:var(--lily);color:var(--ink);line-height:1.55;padding-bottom:60px}
+header{background:linear-gradient(160deg,var(--pine-dk),var(--pine));color:#fff;
+  padding:22px 16px 18px;position:relative;overflow:hidden}
+header::after{content:"❁";position:absolute;right:-6px;top:-18px;font-size:110px;opacity:.08}
+.eyebrow{font-size:12px;letter-spacing:.35em;opacity:.75;margin-bottom:4px}
+h1{font-family:"Noto Serif TC","PingFang TC",serif;font-size:22px;font-weight:700;letter-spacing:.04em}
+.sub{font-size:12.5px;opacity:.8;margin-top:6px}
+.wrap{max-width:720px;margin:0 auto;padding:0 12px}
+header .wrap{padding:0 4px}
+
+/* 統計列 */
+.statbar{display:flex;gap:8px;margin:14px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.stat{flex:0 0 auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:7px 12px;text-align:center;min-width:74px}
+.stat b{display:block;font-size:18px;font-family:"Noto Serif TC",serif}
+.stat span{font-size:10.5px;opacity:.8}
+
+/* 搜尋與篩選 */
+.controls{background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:-2px;
+  padding:12px;box-shadow:0 3px 14px rgba(142,90,158,.10);position:relative;z-index:2}
+.searchrow{display:flex;gap:8px}
+#q{flex:1;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--lily);color:var(--ink)}
+#q:focus{outline:none;border-color:var(--pine)}
+#clearBtn{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:0 12px;
+  font-size:14px;color:var(--mut)}
+.fgroups{margin-top:10px}
+.fg{margin-bottom:8px}
+.fg-label{font-size:11px;color:var(--mut);letter-spacing:.12em;margin-bottom:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:5px 10px;border-radius:999px;border:1.2px solid var(--line);
+  background:#fff;color:var(--ink);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.chip.on{background:var(--pine);border-color:var(--pine);color:#fff}
+.chip.gold.on{background:var(--gold);border-color:var(--gold)}
+.chip.silver.on{background:var(--silver);border-color:var(--silver)}
+.chip.bronze.on{background:var(--bronze);border-color:var(--bronze)}
+.rescount{font-size:12.5px;color:var(--mut);margin:12px 2px 8px}
+.rescount b{color:var(--pine);font-size:15px}
+
+/* 卡片 */
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cid{font-family:"Noto Serif TC",serif;font-weight:700;color:var(--pine);font-size:15px}
+.tag{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.badge{font-size:11.5px;border-radius:6px;padding:2px 8px;color:#fff;font-weight:600}
+.b-曉星{background:var(--pine-dk)} .b-多元{background:var(--plus)} .b-備取{background:#B0568A}
+.medal{font-size:11.5px;border-radius:6px;padding:2px 8px;font-weight:600;color:#fff}
+.m-金質{background:var(--gold)} .m-銀質{background:var(--silver)} .m-銅質{background:var(--bronze)}
+.m-優質{background:var(--good)} .m-優良{background:#D3A6C6} .m-其他{background:#77808A}
+.grid{display:grid;grid-template-columns:52px 1fr;gap:3px 8px;font-size:13px;margin-top:9px}
+.grid dt{color:var(--mut);font-size:12px;padding-top:1px}
+.grid dd{word-break:break-word}
+.certs{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+.certs li{font-size:12.5px;margin-left:16px;margin-bottom:2px}
+.schools{margin-top:8px;font-size:12.5px;background:var(--celadon);border-radius:8px;padding:7px 9px}
+.schools b{color:var(--pine)}
+.note{margin-top:6px;font-size:11.5px;color:#B0568A}
+mark{background:#F8D8EC;border-radius:3px;padding:0 1px}
+
+/* 統計面板 */
+details.stats{background:#fff;border:1px solid var(--line);border-radius:14px;margin:14px 0;padding:0}
+details.stats summary{padding:12px 14px;font-weight:600;color:var(--pine);cursor:pointer;font-size:14px;list-style:none}
+details.stats summary::before{content:"▸ ";}
+details.stats[open] summary::before{content:"▾ "}
+.statsbody{padding:0 14px 14px}
+.bt{font-size:12px;color:var(--mut);margin:10px 0 5px;letter-spacing:.1em}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12.5px}
+.bar .lab{width:92px;flex:0 0 auto;text-align:right;color:var(--ink)}
+.bar .tr{flex:1;background:var(--celadon);border-radius:5px;height:16px;overflow:hidden}
+.bar .fl{height:100%;background:var(--pine);border-radius:5px;min-width:2px}
+.bar .n{width:34px;flex:0 0 auto;color:var(--mut)}
+.empty{text-align:center;color:var(--mut);padding:36px 0;font-size:14px}
+.foot{font-size:11px;color:var(--mut);text-align:center;margin-top:18px;line-height:1.7}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="eyebrow">曉 明 女 中 · 民 國 115 年</div>
+  <h1>多元入學分享查詢系統</h1>
+  <div class="sub">123 位錄取家長留言整理 · 已匿名化 · 供學弟妹參考</div>
+  <div class="statbar" id="statbar"><div class="stat"><b>123</b><span>總筆數</span></div><div class="stat"><b>19</b><span>曉星</span></div><div class="stat"><b>100</b><span>多元</span></div><div class="stat"><b>4</b><span>備取</span></div><div class="stat"><b>17</b><span>營隊金質</span></div></div>
+</div></header>
+
+<div class="wrap">
+  <div class="controls">
+    <div class="searchrow">
+      <input id="q" type="search" placeholder="搜尋:PET、科展、合唱、模範生、衛道A…" autocomplete="off">
+      <button id="clearBtn">清除</button>
+    </div>
+    <div class="fgroups">
+      <div class="fg"><div class="fg-label">錄取方案</div><div class="chips" data-k="an">
+        <span class="chip" data-v="曉星">曉星</span><span class="chip" data-v="多元">多元</span><span class="chip" data-v="備取">備取</span></div></div>
+      <div class="fg"><div class="fg-label">小百合營隊表現</div><div class="chips" data-k="cn">
+        <span class="chip gold" data-v="金質">金質</span><span class="chip silver" data-v="銀質">銀質</span>
+        <span class="chip bronze" data-v="銅質">銅質</span><span class="chip" data-v="優質">優質</span>
+        <span class="chip" data-v="優良">優良</span><span class="chip" data-v="其他">其他</span></div></div>
+      <div class="fg"><div class="fg-label">國小類型</div><div class="chips" data-k="schn">
+        <span class="chip" data-v="公小">公小</span><span class="chip" data-v="私小">私小</span><span class="chip" data-v="未填">未填</span></div></div>
+      <div class="fg"><div class="fg-label">衛道結果</div><div class="chips" data-k="wn">
+        <span class="chip" data-v="衛道A">A</span><span class="chip" data-v="衛道B">B</span>
+        <span class="chip" data-v="衛道C">C</span><span class="chip" data-v="衛道D未錄取">D未錄取</span>
+        <span class="chip" data-v="衛道錄取(未註明)">錄取(未註明)</span><span class="chip" data-v="衛道備取">備取</span>
+        <span class="chip" data-v="衛道未錄取">未錄取</span><span class="chip" data-v="衛道未報考">未報考</span></div></div>
+      <div class="fg"><div class="fg-label">明道結果</div><div class="chips" data-k="mn">
+        <span class="chip" data-v="明道金盾">金盾</span><span class="chip" data-v="明道銀盾">銀盾</span>
+        <span class="chip" data-v="明道粉盾備取">粉盾備取</span><span class="chip" data-v="明道粉盾">粉盾</span>
+        <span class="chip" data-v="明道備取">備取</span><span class="chip" data-v="明道未報考">未報考</span></div></div>
+    </div>
+  </div>
+
+  <details class="stats"><summary>統計總覽</summary><div class="statsbody" id="statsbody"><div class="bt">錄取方案</div><div class="bar"><span class="lab">多元</span><span class="tr"><span class="fl" style="width:81.3%"></span></span><span class="n">100</span></div><div class="bar"><span class="lab">曉星</span><span class="tr"><span class="fl" style="width:15.4%"></span></span><span class="n">19</span></div><div class="bar"><span class="lab">備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bt">小百合營隊表現</div><div class="bar"><span class="lab">銅質</span><span class="tr"><span class="fl" style="width:35.8%"></span></span><span class="n">44</span></div><div class="bar"><span class="lab">銀質</span><span class="tr"><span class="fl" style="width:27.6%"></span></span><span class="n">34</span></div><div class="bar"><span class="lab">優質</span><span class="tr"><span class="fl" style="width:20.3%"></span></span><span class="n">25</span></div><div class="bar"><span class="lab">金質</span><span class="tr"><span class="fl" style="width:13.8%"></span></span><span class="n">17</span></div><div class="bar"><span class="lab">優良</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bar"><span class="lab">其他</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div><div class="bt">公小/私小</div><div class="bar"><span class="lab">公小</span><span class="tr"><span class="fl" style="width:76.4%"></span></span><span class="n">94</span></div><div class="bar"><span class="lab">私小</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div><div class="bar"><span class="lab">未填</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bt">衛道結果</div><div class="bar"><span class="lab">衛道B</span><span class="tr"><span class="fl" style="width:24.4%"></span></span><span class="n">30</span></div><div class="bar"><span class="lab">衛道A</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">衛道C</span><span class="tr"><span class="fl" style="width:14.6%"></span></span><span class="n">18</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:13.0%"></span></span><span class="n">16</span></div><div class="bar"><span class="lab">衛道D未錄取</span><span class="tr"><span class="fl" style="width:8.1%"></span></span><span class="n">10</span></div><div class="bar"><span class="lab">衛道未報考</span><span class="tr"><span class="fl" style="width:8.1%"></span></span><span class="n">10</span></div><div class="bar"><span class="lab">衛道錄取(未註明)</span><span class="tr"><span class="fl" style="width:6.5%"></span></span><span class="n">8</span></div><div class="bar"><span class="lab">衛道未錄取</span><span class="tr"><span class="fl" style="width:4.1%"></span></span><span class="n">5</span></div><div class="bar"><span class="lab">衛道備取</span><span class="tr"><span class="fl" style="width:2.4%"></span></span><span class="n">3</span></div><div class="bt">明道結果</div><div class="bar"><span class="lab">明道金盾</span><span class="tr"><span class="fl" style="width:42.3%"></span></span><span class="n">52</span></div><div class="bar"><span class="lab">明道銀盾</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:17.9%"></span></span><span class="n">22</span></div><div class="bar"><span class="lab">明道未報考</span><span class="tr"><span class="fl" style="width:9.8%"></span></span><span class="n">12</span></div><div class="bar"><span class="lab">明道粉盾備取</span><span class="tr"><span class="fl" style="width:7.3%"></span></span><span class="n">9</span></div><div class="bar"><span class="lab">明道備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bar"><span class="lab">明道粉盾</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div></div></details>
+
+  <div class="rescount" id="rescount">符合 <b>123</b> / 123 筆</div>
+  <div id="list"><div class="card">
+<div class="card-top"><span class="cid">案例 001</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/9 12:36</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET (CEFR B2)</li><li>全國科展數學科第3名 (團體)</li><li>中文檢定初級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 002</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 12:58</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>自然甲</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢中級 (聽讀) 通過</li><li>台中市113電腦繪圖甲組靜態類佳作 (局長章)</li><li>中檢中等通過</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道D未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 003</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 1:18</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>教育部 同聲合唱 國小團體組 特優</li><li>市級模範生</li><li>五上五下六上學期總成績優良</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 004</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/9 1:30</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>自然甲,其他優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>音樂甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET B1</li><li>校內英文說故事第二名/英國皇家鋼琴檢定3級</li><li>校內幹部+服務證明+六上總成績優異讓學校挑選</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取,沒考明道</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 005</span><span class="badge b-備取">曉明備取</span><span class="medal m-優質">營隊 優質</span><span class="tag">小六</span><span class="tag">3/9 1:47</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上、五下、六上學習學習領域優異獎狀 (併在一張)</li><li>鋼琴ABRSM五級檢定合格+學校音樂社團證明 (併在一張)</li><li>運算思維pr93</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 006</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 2:00</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上總學期成績優異</li><li>小學英檢 (聽讀寫)</li><li>沒有競賽</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>只報曉明</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 007</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 2:01</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>除美術甲,其他全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET</li><li>台中市英語故事比賽第四名</li><li>校內國語演講第一名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道D無錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 008</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/9 2:10</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六年級全領域</li><li>台中市直笛團賽第三名</li><li>英檢初級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 009</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 2:18</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英文 flyer 12盾</li><li>台中市教育局世界兒童畫展入選</li><li>學校樂隊參與證明</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 010</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 2:20</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級</li><li>全國學生音樂比賽管樂合奏特優</li><li>臺中市語文競賽複賽寫字甲等</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道金盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 011</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一</span><span class="tag">3/9 2:21</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>社會、本土語、體育甲,其他優</dd><dt>五下</dt><dd>數學、自然、本土語甲,其他優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級通過證書</li><li>臺中市英語讀者劇場比賽第三名</li><li>併:定期評量成績優異、國語文朗讀校內第一名、畢業典禮在校生代表、校外合唱團演出經歷 (以上皆電話詢問過教務處,確認可併才上傳)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C正取,僅考衛道曉明兩校</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 012</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/9 2:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民中檢中級</li><li>劍橋英檢 PET</li><li>校內即席演講特優</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取 (B)、明道正取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 013</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一</span><span class="tag">3/9 2:32</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績優異</li><li>全國音樂比賽特優 (團體)</li><li>校內兒童樂隊參加證明</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道營隊D未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 014</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">小六</span><span class="tag">3/9 2:33</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>IEYI世界青少年發明展金牌</li><li>聯合盃全國作文大賽台中初賽高年級組佳作</li><li>六上期末成績優秀獎</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取 (A)、明道正取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 015</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 2:37</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>數學甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>中檢中級</li><li>IPPE鋼琴檢定3級</li><li>校隊合唱團</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道正取 (銀盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 016</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質獎</span><span class="tag">國一</span><span class="tag">3/9 2:38</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢</li><li>台中市科展複試佳作</li><li>擔任學校旗手獎狀、照顧小一新生表現優良獎狀合併拍照上傳</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道粉盾備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 017</span><span class="badge b-備取">曉明備取</span><span class="medal m-優質">營隊 優質</span><span class="tag">小六</span><span class="tag">3/9 2:39</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級通過</li><li>市長盃足球賽 (團體)</li><li>併:六年級市模範生+五下期末考成績優異+六上期末考成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取C+明道正取銀盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 018</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質獎</span><span class="tag">小四</span><span class="tag">3/9 2:41</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 KET (B1)</li><li>五年級校內字音字型第二名</li><li>五上五下六上學期成績優異合併上傳</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 019</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/9 2:42</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>體育甲,其他全優</dd><dt>五下</dt><dd>體育甲,其他全優</dd><dt>六上</dt><dd>體育甲,其他全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上 (期中、期末) 評量名列前茅獎狀</li><li>台中市114年原住民族語朗讀比賽甲等</li><li>六上擔任班長</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道D未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 020</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">小四</span><span class="tag">3/9 2:47</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>學期總成績優異</li><li>全國輕艇競速錦標賽-第八名</li><li>臺中市閱讀認證-藍鵲</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 021</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 2:50</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>數甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>moves 15盾</li><li>台中市英語朗讀比賽第三名</li><li>五上、五下、六上全領域優勝</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道粉盾備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 022</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一+小六</span><span class="tag">3/9 2:51</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五下二段成績優異</li><li>跆拳道證</li><li>運動會旗手</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>華中資優班</div><div class="note">※ 其他學校僅填華中資優班</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 023</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 2:53</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>體育甲,其他全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級通過</li><li>校內國語演講比賽第2名</li><li>全民中檢初級通過</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取B</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 024</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質獎</span><span class="tag">小四</span><span class="tag">3/9 2:54</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>體育甲.其他優</dd><dt>五下</dt><dd>體育甲.其他優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>GEPT英檢初級</li><li>中檢初級</li><li>台中市國語朗讀比賽第一區第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道金盾錄取.衛道B錄取.曉明優質 (錄取)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 025</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 2:57</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>國語甲、數學甲、自然甲、社會甲、藝術甲,其他優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>數學甲、社會甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民中檢初級通過證書</li><li>劍橋兒童美語A2Flyers證書</li><li>鋼琴十級檢定通過證書</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道 (C) 錄取、明道備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 026</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-銀質">營隊 銀</span><span class="tag">小五</span><span class="tag">3/9 3:02</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績優異</li><li>四年級字音字型第二名</li><li>英檢KET</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道營隊D未錄取、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 027</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一+小四</span><span class="tag">3/9 3:03</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢PET證書</li><li>台中市英文說故事比賽佳作</li><li>六上+五下總成績優異獎狀 (合併曉明女中STEM小學生科學營參加證書)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道 (C) 錄取、明道金盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 028</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀</span><span class="tag">小六</span><span class="tag">3/9 3:03</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級通過</li><li>全民中檢初級通過</li><li>Python檢定認證</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取B+明道正取金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 029</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小六</span><span class="tag">3/9 3:04</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期智育考核獎狀</li><li>五下學期智育考核獎狀</li><li>校內智育育仁之光</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道沒考、明道正取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 030</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小五</span><span class="tag">3/9 3:11</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上、五下、六上學期總成績優異</li><li>全民英檢初級通過</li><li>台中市同聲合唱國小甲組 優等</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道 (金)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 031</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 3:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級通過</li><li>台中市國語文競賽優等</li><li>台中市創意閱讀推銷高手 (個人組) 得名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取 (B)、明道正取 (銀盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 032</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小六</span><span class="tag">3/9 3:27</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢KEY</li><li>全國音樂比賽合唱優等</li><li>英文讀者劇場第二名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 033</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/9 3:39</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢KET</li><li>綠能創意競賽佳作 (台中市政福教育局)</li><li>六上學習表現優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道-錄取/明道沒報考</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 034</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀</span><span class="tag">國一</span><span class="tag">3/9 3:42</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲、自然甲其他優</dd><dt>五下</dt><dd>自然甲其他優</dd><dt>六上</dt><dd>體育甲其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績名列前茅</li><li>山葉鋼琴檢定七級合格+全國學生音樂大賽兒童樂隊國小組優等</li><li>中檢初級合格+閱讀認證 (藍鵲)+五下學期總成績</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道沒錄取+明道正取金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 035</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">小六</span><span class="tag">3/9 3:45</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>體育及健康甲,其它優</dd><dt>五下</dt><dd>體育及健康甲,其它優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級</li><li>全民中檢初級</li><li>五年級班長、校內六年級作文比賽第二名、國小五年級臺中市美術比賽第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取、明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 036</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 3:47</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET B2</li><li>教育部全國音樂大賽弦樂團體優等</li><li>六上學期成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取, 明道金盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 037</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/9 3:52</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>體育甲,其他優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>本土語甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民中檢初級</li><li>全民英檢初級</li><li>校內作文比賽第二名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 038</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">小五</span><span class="tag">3/9 3:56</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>體育甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢FCE</li><li>南投縣中小學生英語能力競賽六年級組第一名</li><li>校內語文競賽作文第一名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>未報考其他學校</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 039</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/9 3:57</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢CAE</li><li>校級模範生併導護生、幹部證明</li><li>校內國語文競賽併校內英文比賽</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道沒錄取 (營隊D) 明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 040</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">小六</span><span class="tag">3/9 4:15</span></div>
+<dl class="grid"><dt>國小</dt><dd>未填</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>社會甲其他全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>KET</li><li>台中市躲避球錦標賽甲組第三名</li><li>六年級上學期成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 041</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/9 4:43</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢</li><li>幹部證明</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>錄取衛道,明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 042</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/9 4:46</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>數學甲,其他優</dd><dt>五下</dt><dd>數學甲,其他優</dd><dt>六上</dt><dd>數學甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上+五下+六上學期成績優異合併</li><li>校內演講比賽優勝+兒童天地作文比賽佳作合併</li><li>校內服務類合併 (DJ+導覽員)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道未報名、明道銀盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 043</span><span class="badge b-多元">曉明·多元</span><span class="medal m-金質">營隊 金質</span><span class="tag">小六</span><span class="tag">3/9 4:56</span></div>
+<dl class="grid"><dt>國小</dt><dd>未填</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>數學甲其他全優</dd><dt>六上</dt><dd>資訊甲藝術甲其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>台中市英語說故事第五名</li><li>IMC複賽銀牌</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 044</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/9 5:02</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>社會甲,其他全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET</li><li>合唱團全國賽特優+YAMAHA鋼琴檢定9級 (經詢問學校建議合併)</li><li>四年級上下學期、五年級上下學期、六年級上學期學期總成績優異 (5張合併)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 045</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小四</span><span class="tag">3/9 5:41</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>機器人競賽 (台中市教育局) 佳作</li><li>PET</li><li>校內國語文競賽 甲等</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>錄取衛道,明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 046</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/9 7:16</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢中級</li><li>台中市科展佳作</li><li>全民中檢中級 合併 六上成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 047</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/9 7:45</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋KET</li><li>台中市文學創作佳作</li><li>5下6上總領域優異、中檢</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取、明道沒報考</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 048</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/9 8:11</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>社會甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級複試</li><li>全國音樂比賽打擊樂團體組特優</li><li>(合併) 暑假作業優良+校內榮譽獎狀+五上班長+租稅股長</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道 (C)、明道 (銀盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 049</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/9 8:53</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>體育甲,其他優</dd><dt>六上</dt><dd>體育甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢初級</li><li>六上全領域優異</li><li>四年級國語字音字形特優</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取 (A)、明道正取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 050</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 9:09</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>數學甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績優異</li><li>校內模範生</li><li>作文校刊</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C正取、明道粉盾備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 051</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小五</span><span class="tag">3/9 9:15</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>科展市賽</li><li>PET</li><li>幹部證明</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B正取、明道金盾正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 052</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/9 10:12</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>資優鑒定複試通過證明</li><li>台中市兒童文學創作徵文第1名 (教育局長印)</li><li>併:小學英檢13個太陽+DACC10+運算思惟PR93</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 053</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一+小五</span><span class="tag">3/9 10:23</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全國美展台中第二名</li><li>全國聯想畫入選</li><li>小學英檢初級 (聽讀寫)</li><li>全民中檢初級</li><li>校模範生</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>弘文語文素養正取、華盛頓資優錄取</div><div class="note">※ 其他學校:弘文、華盛頓</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 054</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">小六</span><span class="tag">3/9 10:44</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上全領域成績優異</li><li>台中市科展第二名</li><li>台中市語文競賽初賽分區第四名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道 (金盾)、立人科學班</div><div class="note">※ 另錄取立人科學班</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 055</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 10:57</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>體育甲,其他全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上成績優異</li><li>台中市字音字形初賽第四名</li><li>四年級模範兒童</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道 金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 056</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/9 11:17</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>校內模範兒童</li><li>議長盃跳繩個人賽</li><li>六上學期總成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取 (A)、明道正取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 057</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/9 11:37</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數甲、自甲、社甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>自甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>FCE英檢</li><li>校內閩南語語文競賽第三名</li><li>五上全領域表現優良</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 058</span><span class="badge b-多元">曉明·多元</span><span class="medal m-其他">營隊 銀盾</span><span class="tag">小一</span><span class="tag">3/10 12:11</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>體育甲</dd><dt>五下</dt><dd>體育甲</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>台中市英文說故事比賽第六名</li><li>裕元獎作文優選</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道金盾</div><div class="note">※ 營隊表現原文寫「銀盾」照登</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 059</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/10 12:41</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>國際運算思維PR95</li><li>校內國語字音字形第一名+閩南語字音字形第二名</li><li>TOEFL Primary Test-Step 1 (Reading/Listening 4顆星)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 060</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/10 12:53</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上五下六上全領域成績優異併檔</li><li>校內演說第二名</li><li>pagamo賢鬥士全國賽優勝+劍橋KET</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)/明道 (金盾)/明德5A班</div><div class="note">※ 另錄取明德5A班</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 061</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 2:10</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級</li><li>全國直笛團 優等</li><li>班長、四市模範生、五市模範生合併</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B正取、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 062</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 7:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優 (體育甲)</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>學期總成績優異</li><li>作文比賽入選</li><li>臺中市模範兒童</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取;明道備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 063</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一+小六</span><span class="tag">3/10 7:33</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>數甲其他全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>音樂比賽</li><li>全民中檢中級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A正取、明道金盾正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 064</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一</span><span class="tag">3/10 8:42</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上+五下+六上學期總成績優異 (合併)</li><li>直笛全國音樂比賽優等 (團體)</li><li>YAMAHA鋼琴檢定9級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道銀盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 065</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">小六</span><span class="tag">3/10 8:46</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上+五下+六上學期總成績優異 (合併)</li><li>劍橋英檢ket</li><li>校內美術比賽水墨畫類第二名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 066</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/10 8:58</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 flyer</li><li>維也納鋼琴檢定九級</li><li>五下定期評量優異、服務學習、DACC11合併</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 067</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">直高一+國一</span><span class="tag">3/10 9:35</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>flyers</li><li>小提琴皇家五級</li><li>幹部服務證明/校內科展</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>東大附錄取、明道粉盾、衛道未錄取</div><div class="note">※ 另錄取東大附</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 068</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小六</span><span class="tag">3/10 10:36</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級</li><li>六上第一學期學期成績優異獎狀</li><li>台中市國小英語合唱團比賽第三名 (5年級)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 069</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一+小五</span><span class="tag">3/10 12:04</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>數學甲</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>Flyers</li><li>校內科展</li><li>中檢初級+學期總成績優異+全國奧林匹克數理競賽自然科學王-優勝獎</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 070</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小三</span><span class="tag">3/10 12:20</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>KET</li><li>114雲縣學生音樂 鋼琴獨奏B組第六名優等+2024 AIMA福岡鋼琴決賽兒童組一等賞+2023 GASCA東京鋼琴決賽GE銀賞</li><li>114雲縣英語說故事成績優異+校內英語說故事特優 (五)+校內單字王第一名 (四)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾 (錄取)、衛道錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 071</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/10 1:00</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲,其餘優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績優異</li><li>臺中市國語文競賽演說分區第2名獎狀</li><li>小托福檢定證明</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道金盾錄取、衛道未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 072</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 1:15</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學甲</dd><dt>五下</dt><dd>數學甲、自然甲</dd><dt>六上</dt><dd>數學甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>校內美術優異獎</li><li>中檢初級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 073</span><span class="badge b-備取">曉明備取</span><span class="medal m-優良">營隊 優良</span><span class="tag">小六</span><span class="tag">3/10 1:41</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢KET</li><li>全國合唱比賽優等</li><li>多元合併 (模範生、志工、幹部...等)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 074</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/10 4:23</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>自然甲其他全優</dd><dt>六上</dt><dd>自然甲其他全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>KET</li><li>全國合唱團比賽優等</li><li>五年級下學期成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C正取,明道粉盾備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 075</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/10 6:27</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數學、社會甲,其餘優</dd><dt>五下</dt><dd>社會甲、體育甲,其餘優</dd><dt>六上</dt><dd>社會甲,其餘優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢KET</li><li>語文競賽臺中市複賽族語朗讀優等</li><li>族語認證初級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾錄取、衛道C錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 076</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/10 7:55</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級</li><li>全國學生美術比賽甲等</li><li>六年級上學期成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道D未錄取,明道銀盾正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 077</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 8:00</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>113學年度全國學生音樂比賽節奏樂隊特優 (團體)</li><li>全民中檢中等</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊C)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 078</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">小六</span><span class="tag">3/10 8:04</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>數學甲、體育甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET (CEFR B2)</li><li>六上學習總成績優異</li><li>校內書法比賽第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾/衛道C</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 079</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/10 8:05</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績優異</li><li>卓越盃語文競賽優異</li><li>志工證書</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取、明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 080</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 8:06</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>本土語言甲</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五六年級成績優異獎狀+校內五年級作文比賽第二名</li><li>全國合唱團比賽優等</li><li>全民中檢中級+劍橋mover</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道粉盾 (備取) 衛道b錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 081</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 8:10</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上五下六上學期總成績優異</li><li>運動會五年級六年級200公尺金牌,仁仁盃游泳比賽混合四式第六,抬頭捷泳第五,曲棍球比賽 (團體) 丙組第2</li><li>全民英檢初級初試通過</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道粉盾備取、衛道未考</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 082</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一</span><span class="tag">3/10 8:11</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>數學甲其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>5上5下6上學期成績優異</li><li>KET</li><li>校內作文第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取 明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 083</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小六</span><span class="tag">3/10 8:14</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>英文甲</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級初試</li><li>YAMAHA鋼琴8級</li><li>六上學期總成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾/衛道A</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 084</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一+小四</span><span class="tag">3/10 8:16</span></div>
+<dl class="grid"><dt>國小</dt><dd>私校</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>數甲其他全優</dd><dt>六上</dt><dd>數甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>FCE</li><li>台中英語劇場第二名</li><li>國科館AI程序競賽佳作</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B正取、明道金盾正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 085</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一+小五</span><span class="tag">3/10 8:17</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級/全民中檢初級 (合併)</li><li>中文演說優異/五年級繪畫比賽第一名 (合併)</li><li>五年級總領域優異/六年級總領域優異/六年級期中優異 (合併)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道D未錄取/明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 086</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 8:20</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上學期總成績優異</li><li>劍橋英檢 PET</li><li>校內國語演講第一名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C錄取、明道金盾錄取、明德5A菁英班錄取</div><div class="note">※ 另錄取明德5A菁英班</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 087</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質獎</span><span class="tag">國一</span><span class="tag">3/10 8:28</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>本土語言甲、數位尋奇甲、其餘優</dd><dt>五下</dt><dd>本土語言甲、數位尋奇甲、其餘優</dd><dt>六上</dt><dd>數位尋奇甲、其餘優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五年級卓越盃銅質獎</li><li>五年級普及化躲避球賽複賽第六名</li><li>五年級國語文校內競賽合併獎狀 (演說比賽第三名、字音字型第二名、作文優等)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道 (粉盾-備取)、弘文 (語文素養課程)、其他未考</div><div class="note">※ 另:弘文語文素養課程</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 088</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅</span><span class="tag">國一</span><span class="tag">3/10 8:28</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級通過</li><li>台中市音樂比賽B組笙第一名</li><li>全國小論文優勝</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道備取明道備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 089</span><span class="badge b-備取">曉明備取</span><span class="medal m-優良">營隊 優良</span><span class="tag">小六</span><span class="tag">3/10 8:29</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>國語甲,其他優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢KET</li><li>音樂比賽優等</li><li>多元合併 (學校社團、幹部...等)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道粉盾備取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 090</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質獎</span><span class="tag">國一</span><span class="tag">3/10 8:56</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>彈性甲,其他全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>臺中市閱讀認證4000分以上合併六上學期總成績優異</li><li>語文競賽臺中市複賽寫字優等合併全國美術比賽台中市初賽書法第三名</li><li>多元合併 (學校社團、幹部、模範生...等)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>未考其他學校</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 091</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一+小三</span><span class="tag">3/10 9:44</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>113年全國學生舞蹈比賽團體甲組民俗舞優等</li><li>113年臺中市英語歌唱比賽乙組A區第一名 (團體)</li><li>四到六年級評量考試成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>未報考其他學校</div><div class="note">※ 留言開頭寫「分享範例:」</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 092</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/10 10:00</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋Flyers/六上總領域優異 (合併)</li><li>中市科展第三名/中市英語歌唱比賽第二名/校內演講比賽第二名 (合併)</li><li>市模範生/校隊服務清單 (合併)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取。明道未報名。</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 093</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/10 10:33</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級 (初試/複試)</li><li>六上三獎狀</li><li>縣賽:環境知識競賽 (佳作)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)/明道 (金盾)/精誠 (白金)</div><div class="note">※ 另錄取精誠 (白金)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 094</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/10 10:59</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>合唱全國比賽特優</li><li>六上全領域均優</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊C)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 095</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/10 11:06</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>自甲,其它優</dd><dt>五下</dt><dd>數甲,其它優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上期末成績優異</li><li>校內卡片設計入選</li><li>校外志工服務市政府獎勵獎狀</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>弘文菁英素養班 明道粉盾備取</div><div class="note">※ 另:弘文菁英素養班</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 096</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/11 12:15</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 KET (CEFR: B1)</li><li>全國學生舞蹈比賽台中市初賽團體特優</li><li>六上領域總成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 097</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一+小六</span><span class="tag">3/11 8:27</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢初級</li><li>市級演說第四名</li><li>校內學年司儀/志工服務</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 098</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/11 10:35</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>本土語言甲 其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢初級</li><li>校內美術漫畫高年級優等</li><li>卓越盃5年級數學銅質獎</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 099</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/11 1:47</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數甲 其他優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>體育甲 其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級初複試通過</li><li>校內賽跑第三 (個人)</li><li>合併檔案:五下期末考成績優異+六上期末考成績優異+四年級總學期成績優異</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道C正取,明道銀正取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 100</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/11 4:21</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>體育甲,其他全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上下六上總成績優異</li><li>劍橋英檢</li><li>校內大隊接力第二</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>弘文科學素養班,華盛頓資優,新民菁英班</div><div class="note">※ 其他:弘文、華盛頓、新民</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 101</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/11 5:40</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優 (數學甲)</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢KET 併全民中檢初級</li><li>全國學生音樂全國賽合唱團體特優</li><li>五年級上下學期、六年級上學期成績優異 (3張合併)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 102</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/11 7:19</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五年級上下學期成績優異 (合併)</li><li>市級繪畫優等獎</li><li>PET</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 103</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/11 8:06</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上下六上總成績優異</li><li>全國美展台中市初選佳作</li><li>台中市英語歌謠分組第三名 (團)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 104</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/12 10:09</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民中檢中級</li><li>校內朗讀甲等</li><li>劍橋英檢 PET</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 105</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/12 10:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>校內五年級字音字形第二名</li><li>校內六年級二百公尺第二名</li><li>五年級上下學期、六年級上學期成績優異 (3張合併)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>無</div><div class="note">※ 其他學校填「無」</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 106</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/12 7:43</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>六上七大領域</li><li>GEPT小學英檢10個太陽/全民英檢初級聽讀</li><li>校內母親節卡片獎狀</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道中學D未錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 107</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小五</span><span class="tag">3/12 9:15</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢PET</li><li>中市國小英語合唱比賽冠軍</li><li>市長盃爵士雙人舞第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (B);明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 108</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/12 11:20</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上,五下,六上學期總成績獎狀 (合併)</li><li>合唱團全國賽特優</li><li>PET (B1)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道A錄取、明道金盾</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 109</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/13 6:45</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET</li><li>校內語文競賽 國語演説第一名</li><li>全國奧林匹克數理競賽 金質獎</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>只有報考曉明女中</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 110</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">小六</span><span class="tag">3/13 11:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級 (初複試通過)</li><li>校內作文第一名+臺中市兒童天地作文比賽第三名 (合併)</li><li>臺中市環境知識賽第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (A),明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 111</span><span class="badge b-多元">曉明·多元</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/13 7:40</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民中檢中高級</li><li>英文劍橋PET通過</li><li>四年級英文全學習成績第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 112</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">國一</span><span class="tag">3/13 7:55</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 Flyers</li><li>全國鄉土歌謠比賽團體組優等</li><li>全國學生美術比賽版畫類第三名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (B);明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 113</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/13 8:25</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>台中市科展第三名</li><li>市級模範生/英文演講比賽第三名/各領域均優/四項校隊參與 (合併上傳)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊C)、明道 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 114</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/13 9:28</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>體育甲</dd><dt>五下</dt><dd>音樂、體育甲</dd><dt>六上</dt><dd>音樂甲</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五年級+六年級第一名獎狀</li><li>中文檢定初級</li><li>學校運動會比賽團體第二名</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)、明德5A錄取、明道未報考</div><div class="note">※ 另錄取明德5A</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 115</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/13 9:42</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋KET</li><li>校內和校外作文比賽獎狀合併</li><li>經典檢定和藝術小天使</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道銀盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 116</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">小六</span><span class="tag">3/14 10:35</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>英檢初級初試通過</li><li>六上月考成績優異</li><li>國際鋼琴檢定4級</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道B錄取、明道金盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 117</span><span class="badge b-曉星">曉明·曉星</span><span class="medal m-金質">營隊 金質</span><span class="tag">小六</span><span class="tag">3/14 11:37</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>優</dd><dt>五下</dt><dd>優</dd><dt>六上</dt><dd>優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>全民英檢初級證書</li><li>奧數競賽銀質獎</li><li>六上學期總領域優異獎狀</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道金盾錄取</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 118</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/14 2:19</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢 PET</li><li>「2025裕元獎-全國中小學生文字創作徵文比賽」入選 (個人)</li><li>五上、五下、六上學期全領域均優獎 (併)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊B)、明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 119</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/16 8:53</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>數甲、其餘優</dd><dt>五下</dt><dd>數甲、健甲、其餘優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>PET</li><li>台中市音樂比賽團賽優等</li><li>六上學期全領域成績優良</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 120</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/17 11:23</span></div>
+<dl class="grid"><dt>國小</dt><dd>私小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>劍橋英檢PET</li><li>中檢中等</li><li>校內美術比賽-優選</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道備取 (營隊C)、明道錄取 (金盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 121</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銅質">營隊 銅質</span><span class="tag">國一</span><span class="tag">3/18 12:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>數學甲,其他優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>五上、五下學期全領域表現優異獎 (併)</li><li>113學年度全國民俗體育競賽女子組開叉跳一迴旋競速優等</li><li>市模範生</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>明道錄取 (銀盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 122</span><span class="badge b-多元">曉明·多元</span><span class="medal m-優質">營隊 優質</span><span class="tag">國一</span><span class="tag">3/18 11:22</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>數學、自然甲,其他優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>KET、中檢初期、五上&amp;六上學期總成績優良</li><li>5年級校內擲遠第五名、4年級60公尺第四名</li><li>營養小天使協助午餐工作獎狀、111-114暑期戶外探險營隊獎狀,附上為營隊烹飪、溯溪、溪降照片,以類自傳方式呈現自我的能力。(說明會時主任有說可以用類自傳呈現)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道D (未錄取)、明道 (銀盾)</div></div><div class="card">
+<div class="card-top"><span class="cid">案例 123</span><span class="badge b-多元">曉明·多元</span><span class="medal m-銀質">營隊 銀質</span><span class="tag">國一</span><span class="tag">3/19 12:28</span></div>
+<dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
+<div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>114全國語文競賽台中市初賽 國語朗讀 分區第4名 (個人)</li><li>114英語讀者劇場 甲組第一名 (團體)</li><li>2025台中市英文菁英盃國小實用聽力能力組亞軍 (個人)</li></ul></dd></dl></div>
+<div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道錄取 (金盾)、華盛頓資優申請錄取</div><div class="note">※ 另錄取華盛頓資優</div></div></div>
+  <div class="foot">資料來源:115年入學家長 LINE 記事本留言 123 則(2026/3/9–3/19)<br>
+  已去識別化;成績與獎項均照原文登載,空白處標示「未填」,未經補寫。<br>各校制度年年可能調整,本資料僅供方向參考。</div>
+</div>
+
+<script>
+const DATA = [{"tag": "國一", "d": "3/9", "t": "12:36", "adm": "是.多元錄取.", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋英檢 PET (CEFR B2)", "全國科展數學科第3名 (團體)", "中文檢定初級"], "oth": "衛道備取", "wn": "衛道備取", "mn": "未提及", "note": "", "id": 1}, {"tag": "國一", "d": "3/9", "t": "12:58", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "自然甲", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["英檢中級 (聽讀) 通過", "台中市113電腦繪圖甲組靜態類佳作 (局長章)", "中檢中等通過"], "oth": "衛道D未錄取", "wn": "衛道D未錄取", "mn": "未提及", "note": "", "id": 2}, {"tag": "國一", "d": "3/9", "t": "1:18", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["教育部 同聲合唱 國小團體組 特優", "市級模範生", "五上五下六上學期總成績優良"], "oth": "衛道A錄取", "wn": "衛道A", "mn": "未提及", "note": "", "id": 3}, {"tag": "國一", "d": "3/9", "t": "1:30", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "自然甲,其他優", "g5b": "全優", "g6a": "音樂甲,其他優", "camp": "銅質", "cn": "銅質", "certs": ["PET B1", "校內英文說故事第二名/英國皇家鋼琴檢定3級", "校內幹部+服務證明+六上總成績優異讓學校挑選"], "oth": "衛道A錄取,沒考明道", "wn": "衛道A", "mn": "明道未報考", "note": "", "id": 4}, {"tag": "小六", "d": "3/9", "t": "1:47", "adm": "備取", "an": "備取", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["五上、五下、六上學習學習領域優異獎狀 (併在一張)", "鋼琴ABRSM五級檢定合格+學校音樂社團證明 (併在一張)", "運算思維pr93"], "oth": "衛道C錄取", "wn": "衛道C", "mn": "未提及", "note": "", "id": 5}, {"tag": "國一", "d": "3/9", "t": "2:00", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["六上總學期成績優異", "小學英檢 (聽讀寫)", "沒有競賽"], "oth": "只報曉明", "wn": "衛道未報考", "mn": "明道未報考", "note": "", "id": 6}, {"tag": "國一", "d": "3/9", "t": "2:01", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "除美術甲,其他全優", "camp": "銀質", "cn": "銀質", "certs": ["劍橋英檢 PET", "台中市英語故事比賽第四名", "校內國語演講第一名"], "oth": "衛道D無錄取", "wn": "衛道D未錄取", "mn": "未提及", "note": "", "id": 7}, {"tag": "小六", "d": "3/9", "t": "2:10", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["六年級全領域", "台中市直笛團賽第三名", "英檢初級"], "oth": "明道銀盾", "wn": "未提及", "mn": "明道銀盾", "note": "", "id": 8}, {"tag": "國一", "d": "3/9", "t": "2:18", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["劍橋英文 flyer 12盾", "台中市教育局世界兒童畫展入選", "學校樂隊參與證明"], "oth": "衛道B錄取、明道銀盾錄取", "wn": "衛道B", "mn": "明道銀盾", "note": "", "id": 9}, {"tag": "國一", "d": "3/9", "t": "2:20", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["全民英檢初級", "全國學生音樂比賽管樂合奏特優", "臺中市語文競賽複賽寫字甲等"], "oth": "衛道B錄取、明道金盾錄取", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 10}, {"tag": "國一", "d": "3/9", "t": "2:21", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "社會、本土語、體育甲,其他優", "g5b": "數學、自然、本土語甲,其他優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["全民英檢初級通過證書", "臺中市英語讀者劇場比賽第三名", "併:定期評量成績優異、國語文朗讀校內第一名、畢業典禮在校生代表、校外合唱團演出經歷 (以上皆電話詢問過教務處,確認可併才上傳)"], "oth": "衛道C正取,僅考衛道曉明兩校", "wn": "衛道C", "mn": "明道未報考", "note": "", "id": 11}, {"tag": "國一", "d": "3/9", "t": "2:22", "adm": "曉星", "an": "曉星", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["全民中檢中級", "劍橋英檢 PET", "校內即席演講特優"], "oth": "衛道正取 (B)、明道正取 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 12}, {"tag": "國一", "d": "3/9", "t": "2:32", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "數學甲", "g5b": "全優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["六上學期總成績優異", "全國音樂比賽特優 (團體)", "校內兒童樂隊參加證明"], "oth": "衛道營隊D未錄取", "wn": "衛道D未錄取", "mn": "未提及", "note": "", "id": 13}, {"tag": "小六", "d": "3/9", "t": "2:33", "adm": "曉星", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["IEYI世界青少年發明展金牌", "聯合盃全國作文大賽台中初賽高年級組佳作", "六上期末成績優秀獎"], "oth": "衛道正取 (A)、明道正取 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 14}, {"tag": "國一", "d": "3/9", "t": "2:37", "adm": "多元", "an": "多元", "sch": "私小", "g5a": "數學甲", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["中檢中級", "IPPE鋼琴檢定3級", "校隊合唱團"], "oth": "明道正取 (銀盾)", "wn": "未提及", "mn": "明道銀盾", "note": "", "id": 15}, {"tag": "國一", "d": "3/9", "t": "2:38", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質獎", "cn": "銅質", "certs": ["劍橋英檢", "台中市科展複試佳作", "擔任學校旗手獎狀、照顧小一新生表現優良獎狀合併拍照上傳"], "oth": "明道粉盾備取", "wn": "未提及", "mn": "明道粉盾備取", "note": "", "id": 16}, {"tag": "小六", "d": "3/9", "t": "2:39", "adm": "備取", "an": "備取", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["全民英檢初級通過", "市長盃足球賽 (團體)", "併:六年級市模範生+五下期末考成績優異+六上期末考成績優異"], "oth": "衛道正取C+明道正取銀盾", "wn": "衛道C", "mn": "明道銀盾", "note": "", "id": 17}, {"tag": "小四", "d": "3/9", "t": "2:41", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質獎", "cn": "銅質", "certs": ["劍橋英檢 KET (B1)", "五年級校內字音字型第二名", "五上五下六上學期成績優異合併上傳"], "oth": "明道金盾", "wn": "未提及", "mn": "明道金盾", "note": "", "id": 18}, {"tag": "國一", "d": "3/9", "t": "2:42", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "體育甲,其他全優", "g5b": "體育甲,其他全優", "g6a": "體育甲,其他全優", "camp": "銅質", "cn": "銅質", "certs": ["六上 (期中、期末) 評量名列前茅獎狀", "台中市114年原住民族語朗讀比賽甲等", "六上擔任班長"], "oth": "衛道D未錄取", "wn": "衛道D未錄取", "mn": "未提及", "note": "", "id": 19}, {"tag": "小四", "d": "3/9", "t": "2:47", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["學期總成績優異", "全國輕艇競速錦標賽-第八名", "臺中市閱讀認證-藍鵲"], "oth": "明道備取", "wn": "未提及", "mn": "明道備取", "note": "", "id": 20}, {"tag": "國一", "d": "3/9", "t": "2:50", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "數甲", "g5b": "全優", "g6a": "數甲", "camp": "優質", "cn": "優質", "certs": ["moves 15盾", "台中市英語朗讀比賽第三名", "五上、五下、六上全領域優勝"], "oth": "明道粉盾備取", "wn": "未提及", "mn": "明道粉盾備取", "note": "", "id": 21}, {"tag": "國一+小六", "d": "3/9", "t": "2:51", "adm": "多元", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["五下二段成績優異", "跆拳道證", "運動會旗手"], "oth": "華中資優班", "wn": "未提及", "mn": "未提及", "note": "其他學校僅填華中資優班", "id": 22}, {"tag": "國一", "d": "3/9", "t": "2:53", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "體育甲,其他全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["全民英檢初級通過", "校內國語演講比賽第2名", "全民中檢初級通過"], "oth": "衛道正取B", "wn": "衛道B", "mn": "未提及", "note": "", "id": 23}, {"tag": "小四", "d": "3/9", "t": "2:54", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "體育甲.其他優", "g5b": "體育甲.其他優", "g6a": "全優", "camp": "優質獎", "cn": "優質", "certs": ["GEPT英檢初級", "中檢初級", "台中市國語朗讀比賽第一區第三名"], "oth": "明道金盾錄取.衛道B錄取.曉明優質 (錄取)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 24}, {"tag": "國一", "d": "3/9", "t": "2:57", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "國語甲、數學甲、自然甲、社會甲、藝術甲,其他優", "g5b": "全優", "g6a": "數學甲、社會甲,其他優", "camp": "優質", "cn": "優質", "certs": ["全民中檢初級通過證書", "劍橋兒童美語A2Flyers證書", "鋼琴十級檢定通過證書"], "oth": "衛道 (C) 錄取、明道備取", "wn": "衛道C", "mn": "明道備取", "note": "", "id": 25}, {"tag": "小五", "d": "3/9", "t": "3:02", "adm": "曉星", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀", "cn": "銀質", "certs": ["六上學期總成績優異", "四年級字音字型第二名", "英檢KET"], "oth": "衛道營隊D未錄取、明道金盾", "wn": "衛道D未錄取", "mn": "明道金盾", "note": "", "id": 26}, {"tag": "國一+小四", "d": "3/9", "t": "3:03", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["劍橋英檢PET證書", "台中市英文說故事比賽佳作", "六上+五下總成績優異獎狀 (合併曉明女中STEM小學生科學營參加證書)"], "oth": "衛道 (C) 錄取、明道金盾錄取", "wn": "衛道C", "mn": "明道金盾", "note": "", "id": 27}, {"tag": "小六", "d": "3/9", "t": "3:03", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀", "cn": "銀質", "certs": ["全民英檢初級通過", "全民中檢初級通過", "Python檢定認證"], "oth": "衛道正取B+明道正取金盾", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 28}, {"tag": "小六", "d": "3/9", "t": "3:04", "adm": "曉星", "an": "曉星", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["六上學期智育考核獎狀", "五下學期智育考核獎狀", "校內智育育仁之光"], "oth": "衛道沒考、明道正取 (金盾)", "wn": "衛道未報考", "mn": "明道金盾", "note": "", "id": 29}, {"tag": "小五", "d": "3/9", "t": "3:11", "adm": "是 (多元)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["五上、五下、六上學期總成績優異", "全民英檢初級通過", "台中市同聲合唱國小甲組 優等"], "oth": "明道 (金)", "wn": "未提及", "mn": "明道金盾", "note": "", "id": 30}, {"tag": "國一", "d": "3/9", "t": "3:22", "adm": "曉星錄取", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["全民英檢初級通過", "台中市國語文競賽優等", "台中市創意閱讀推銷高手 (個人組) 得名"], "oth": "衛道正取 (B)、明道正取 (銀盾)", "wn": "衛道B", "mn": "明道銀盾", "note": "", "id": 31}, {"tag": "小六", "d": "3/9", "t": "3:27", "adm": "曉星", "an": "曉星", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["英檢KEY", "全國音樂比賽合唱優等", "英文讀者劇場第二名"], "oth": "衛道錄取", "wn": "衛道錄取(未註明)", "mn": "未提及", "note": "", "id": 32}, {"tag": "國一", "d": "3/9", "t": "3:39", "adm": "曉星", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["英檢KET", "綠能創意競賽佳作 (台中市政福教育局)", "六上學習表現優異"], "oth": "衛道-錄取/明道沒報考", "wn": "衛道錄取(未註明)", "mn": "明道未報考", "note": "", "id": 33}, {"tag": "國一", "d": "3/9", "t": "3:42", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "數學甲、自然甲其他優", "g5b": "自然甲其他優", "g6a": "體育甲其他優", "camp": "銀", "cn": "銀質", "certs": ["六上學期總成績名列前茅", "山葉鋼琴檢定七級合格+全國學生音樂大賽兒童樂隊國小組優等", "中檢初級合格+閱讀認證 (藍鵲)+五下學期總成績"], "oth": "衛道沒錄取+明道正取金盾", "wn": "衛道未錄取", "mn": "明道金盾", "note": "", "id": 34}, {"tag": "小六", "d": "3/9", "t": "3:45", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "體育及健康甲,其它優", "g5b": "體育及健康甲,其它優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["全民英檢初級", "全民中檢初級", "五年級班長、校內六年級作文比賽第二名、國小五年級臺中市美術比賽第三名"], "oth": "衛道A錄取、明道銀盾錄取", "wn": "衛道A", "mn": "明道銀盾", "note": "", "id": 35}, {"tag": "國一", "d": "3/9", "t": "3:47", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["劍橋英檢 PET B2", "教育部全國音樂大賽弦樂團體優等", "六上學期成績優異"], "oth": "衛道A錄取, 明道金盾錄取", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 36}, {"tag": "國一", "d": "3/9", "t": "3:52", "adm": "是 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "體育甲,其他優", "g5b": "全優", "g6a": "本土語甲,其他優", "camp": "金質", "cn": "金質", "certs": ["全民中檢初級", "全民英檢初級", "校內作文比賽第二名"], "oth": "衛道錄取 (營隊B)", "wn": "衛道B", "mn": "未提及", "note": "", "id": 37}, {"tag": "小五", "d": "3/9", "t": "3:56", "adm": "是 (多元)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "體育甲,其他優", "camp": "優質", "cn": "優質", "certs": ["劍橋英檢FCE", "南投縣中小學生英語能力競賽六年級組第一名", "校內語文競賽作文第一名"], "oth": "未報考其他學校", "wn": "衛道未報考", "mn": "明道未報考", "note": "", "id": 38}, {"tag": "小六", "d": "3/9", "t": "3:57", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋英檢CAE", "校級模範生併導護生、幹部證明", "校內國語文競賽併校內英文比賽"], "oth": "衛道沒錄取 (營隊D) 明道 (金盾)", "wn": "衛道D未錄取", "mn": "明道金盾", "note": "", "id": 39}, {"tag": "小六", "d": "3/9", "t": "4:15", "adm": "多元", "an": "多元", "sch": "未填", "g5a": "全優", "g5b": "社會甲其他全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["KET", "台中市躲避球錦標賽甲組第三名", "六年級上學期成績優異"], "oth": "衛道B、明道金盾", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 40}, {"tag": "國一", "d": "3/9", "t": "4:43", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["英檢", "幹部證明"], "oth": "錄取衛道,明道 (金盾)", "wn": "衛道錄取(未註明)", "mn": "明道金盾", "note": "", "id": 41}, {"tag": "國一", "d": "3/9", "t": "4:46", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "數學甲,其他優", "g5b": "數學甲,其他優", "g6a": "數學甲,其他優", "camp": "銅質", "cn": "銅質", "certs": ["五上+五下+六上學期成績優異合併", "校內演講比賽優勝+兒童天地作文比賽佳作合併", "校內服務類合併 (DJ+導覽員)"], "oth": "衛道未報名、明道銀盾", "wn": "衛道未報考", "mn": "明道銀盾", "note": "", "id": 42}, {"tag": "小六", "d": "3/9", "t": "4:56", "adm": "多元", "an": "多元", "sch": "未填", "g5a": "全優", "g5b": "數學甲其他全優", "g6a": "資訊甲藝術甲其他優", "camp": "金質", "cn": "金質", "certs": ["PET", "台中市英語說故事第五名", "IMC複賽銀牌"], "oth": "衛道B錄取、明道金盾", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 43}, {"tag": "小六", "d": "3/9", "t": "5:02", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "社會甲,其他全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋英檢 PET", "合唱團全國賽特優+YAMAHA鋼琴檢定9級 (經詢問學校建議合併)", "四年級上下學期、五年級上下學期、六年級上學期學期總成績優異 (5張合併)"], "oth": "衛道錄取 (營隊B)、明道 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 44}, {"tag": "小四", "d": "3/9", "t": "5:41", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["機器人競賽 (台中市教育局) 佳作", "PET", "校內國語文競賽 甲等"], "oth": "錄取衛道,明道 (金盾)", "wn": "衛道錄取(未註明)", "mn": "明道金盾", "note": "", "id": 45}, {"tag": "國一", "d": "3/9", "t": "7:16", "adm": "是 (曉星方案)", "an": "曉星", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["全民英檢中級", "台中市科展佳作", "全民中檢中級 合併 六上成績優異"], "oth": "衛道錄取 (營隊A)、明道 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 46}, {"tag": "小六", "d": "3/9", "t": "7:45", "adm": "是 (多元)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋KET", "台中市文學創作佳作", "5下6上總領域優異、中檢"], "oth": "衛道錄取、明道沒報考", "wn": "衛道錄取(未註明)", "mn": "明道未報考", "note": "", "id": 47}, {"tag": "小六", "d": "3/9", "t": "8:11", "adm": "是 (多元)", "an": "多元", "sch": "公小", "g5a": "社會甲", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["全民英檢初級複試", "全國音樂比賽打擊樂團體組特優", "(合併) 暑假作業優良+校內榮譽獎狀+五上班長+租稅股長"], "oth": "衛道 (C)、明道 (銀盾)", "wn": "衛道C", "mn": "明道銀盾", "note": "", "id": 48}, {"tag": "國一", "d": "3/9", "t": "8:53", "adm": "曉星", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "體育甲,其他優", "g6a": "體育甲,其他優", "camp": "金質", "cn": "金質", "certs": ["英檢初級", "六上全領域優異", "四年級國語字音字形特優"], "oth": "衛道正取 (A)、明道正取 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 49}, {"tag": "國一", "d": "3/9", "t": "9:09", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "數學甲", "g5b": "全優", "g6a": "數學甲", "camp": "優質", "cn": "優質", "certs": ["六上學期總成績優異", "校內模範生", "作文校刊"], "oth": "衛道C正取、明道粉盾備取", "wn": "衛道C", "mn": "明道粉盾備取", "note": "", "id": 50}, {"tag": "小五", "d": "3/9", "t": "9:15", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["科展市賽", "PET", "幹部證明"], "oth": "衛道B正取、明道金盾正取", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 51}, {"tag": "國一", "d": "3/9", "t": "10:12", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["資優鑒定複試通過證明", "台中市兒童文學創作徵文第1名 (教育局長印)", "併:小學英檢13個太陽+DACC10+運算思惟PR93"], "oth": "衛道C正取", "wn": "衛道C", "mn": "未提及", "note": "", "id": 52}, {"tag": "國一+小五", "d": "3/9", "t": "10:23", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["全國美展台中第二名", "全國聯想畫入選", "小學英檢初級 (聽讀寫)", "全民中檢初級", "校模範生"], "oth": "弘文語文素養正取、華盛頓資優錄取", "wn": "未提及", "mn": "未提及", "note": "其他學校:弘文、華盛頓", "id": 53}, {"tag": "小六", "d": "3/9", "t": "10:44", "adm": "是 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["六上全領域成績優異", "台中市科展第二名", "台中市語文競賽初賽分區第四名"], "oth": "衛道錄取 (營隊A)、明道 (金盾)、立人科學班", "wn": "衛道A", "mn": "明道金盾", "note": "另錄取立人科學班", "id": 54}, {"tag": "國一", "d": "3/9", "t": "10:57", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "體育甲,其他全優", "camp": "優質", "cn": "優質", "certs": ["六上成績優異", "台中市字音字形初賽第四名", "四年級模範兒童"], "oth": "明道 金盾", "wn": "未提及", "mn": "明道金盾", "note": "", "id": 55}, {"tag": "國一", "d": "3/9", "t": "11:17", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "數學甲", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["校內模範兒童", "議長盃跳繩個人賽", "六上學期總成績優異"], "oth": "衛道正取 (A)、明道正取 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 56}, {"tag": "國一", "d": "3/9", "t": "11:37", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "數甲、自甲、社甲", "g5b": "全優", "g6a": "自甲", "camp": "優質", "cn": "優質", "certs": ["FCE英檢", "校內閩南語語文競賽第三名", "五上全領域表現優良"], "oth": "衛道B錄取、明道金盾", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 57}, {"tag": "小一", "d": "3/10", "t": "12:11", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "體育甲", "g5b": "體育甲", "g6a": "全優", "camp": "銀盾", "cn": "其他", "certs": ["PET", "台中市英文說故事比賽第六名", "裕元獎作文優選"], "oth": "衛道B錄取、明道金盾", "wn": "衛道B", "mn": "明道金盾", "note": "營隊表現原文寫「銀盾」照登", "id": 58}, {"tag": "國一", "d": "3/10", "t": "12:41", "adm": "多元錄取", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["國際運算思維PR95", "校內國語字音字形第一名+閩南語字音字形第二名", "TOEFL Primary Test-Step 1 (Reading/Listening 4顆星)"], "oth": "衛道C錄取", "wn": "衛道C", "mn": "未提及", "note": "", "id": 59}, {"tag": "國一", "d": "3/10", "t": "12:53", "adm": "是 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["五上五下六上全領域成績優異併檔", "校內演說第二名", "pagamo賢鬥士全國賽優勝+劍橋KET"], "oth": "衛道錄取 (營隊A)/明道 (金盾)/明德5A班", "wn": "衛道A", "mn": "明道金盾", "note": "另錄取明德5A班", "id": 60}, {"tag": "國一", "d": "3/10", "t": "2:10", "adm": "是.多元錄取.", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["全民英檢初級", "全國直笛團 優等", "班長、四市模範生、五市模範生合併"], "oth": "衛道B正取、明道金盾", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 61}, {"tag": "國一", "d": "3/10", "t": "7:22", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優 (體育甲)", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["學期總成績優異", "作文比賽入選", "臺中市模範兒童"], "oth": "衛道錄取;明道備取", "wn": "衛道錄取(未註明)", "mn": "明道備取", "note": "", "id": 62}, {"tag": "國一+小六", "d": "3/10", "t": "7:33", "adm": "多元錄取", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "數甲其他全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["PET", "音樂比賽", "全民中檢中級"], "oth": "衛道A正取、明道金盾正取", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 63}, {"tag": "國一", "d": "3/10", "t": "8:42", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "數學甲", "g5b": "全優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["五上+五下+六上學期總成績優異 (合併)", "直笛全國音樂比賽優等 (團體)", "YAMAHA鋼琴檢定9級"], "oth": "衛道B錄取、明道銀盾", "wn": "衛道B", "mn": "明道銀盾", "note": "", "id": 64}, {"tag": "小六", "d": "3/10", "t": "8:46", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["五上+五下+六上學期總成績優異 (合併)", "劍橋英檢ket", "校內美術比賽水墨畫類第二名"], "oth": "衛道A錄取", "wn": "衛道A", "mn": "未提及", "note": "", "id": 65}, {"tag": "國一", "d": "3/10", "t": "8:58", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["劍橋英檢 flyer", "維也納鋼琴檢定九級", "五下定期評量優異、服務學習、DACC11合併"], "oth": "衛道C錄取", "wn": "衛道C", "mn": "未提及", "note": "", "id": 66}, {"tag": "直高一+國一", "d": "3/10", "t": "9:35", "adm": "多元", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["flyers", "小提琴皇家五級", "幹部服務證明/校內科展"], "oth": "東大附錄取、明道粉盾、衛道未錄取", "wn": "衛道未錄取", "mn": "明道粉盾", "note": "另錄取東大附", "id": 67}, {"tag": "小六", "d": "3/10", "t": "10:36", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["全民英檢初級", "六上第一學期學期成績優異獎狀", "台中市國小英語合唱團比賽第三名 (5年級)"], "oth": "衛道錄取 (營隊A)、明道 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 68}, {"tag": "國一+小五", "d": "3/10", "t": "12:04", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "數學甲", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["Flyers", "校內科展", "中檢初級+學期總成績優異+全國奧林匹克數理競賽自然科學王-優勝獎"], "oth": "衛道未錄取", "wn": "衛道未錄取", "mn": "未提及", "note": "", "id": 69}, {"tag": "小三", "d": "3/10", "t": "12:20", "adm": "是,多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["KET", "114雲縣學生音樂 鋼琴獨奏B組第六名優等+2024 AIMA福岡鋼琴決賽兒童組一等賞+2023 GASCA東京鋼琴決賽GE銀賞", "114雲縣英語說故事成績優異+校內英語說故事特優 (五)+校內單字王第一名 (四)"], "oth": "明道銀盾 (錄取)、衛道錄取", "wn": "衛道錄取(未註明)", "mn": "明道銀盾", "note": "", "id": 70}, {"tag": "國一", "d": "3/10", "t": "1:00", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "數學甲,其餘優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["六上學期總成績優異", "臺中市國語文競賽演說分區第2名獎狀", "小托福檢定證明"], "oth": "明道金盾錄取、衛道未錄取", "wn": "衛道未錄取", "mn": "明道金盾", "note": "", "id": 71}, {"tag": "國一", "d": "3/10", "t": "1:15", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "數學甲", "g5b": "數學甲、自然甲", "g6a": "數學甲", "camp": "銅質", "cn": "銅質", "certs": ["PET", "校內美術優異獎", "中檢初級"], "oth": "明道銀盾錄取", "wn": "未提及", "mn": "明道銀盾", "note": "", "id": 72}, {"tag": "小六", "d": "3/10", "t": "1:41", "adm": "備取", "an": "備取", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優良", "cn": "優良", "certs": ["劍橋英檢KET", "全國合唱比賽優等", "多元合併 (模範生、志工、幹部...等)"], "oth": "衛道正取", "wn": "衛道錄取(未註明)", "mn": "未提及", "note": "", "id": 73}, {"tag": "國一", "d": "3/10", "t": "4:23", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "自然甲其他全優", "g6a": "自然甲其他全優", "camp": "優質", "cn": "優質", "certs": ["KET", "全國合唱團比賽優等", "五年級下學期成績優異"], "oth": "衛道C正取,明道粉盾備取", "wn": "衛道C", "mn": "明道粉盾備取", "note": "", "id": 74}, {"tag": "國一", "d": "3/10", "t": "6:27", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "數學、社會甲,其餘優", "g5b": "社會甲、體育甲,其餘優", "g6a": "社會甲,其餘優", "camp": "銀質", "cn": "銀質", "certs": ["劍橋英檢KET", "語文競賽臺中市複賽族語朗讀優等", "族語認證初級"], "oth": "明道銀盾錄取、衛道C錄取", "wn": "衛道C", "mn": "明道銀盾", "note": "", "id": 75}, {"tag": "小六", "d": "3/10", "t": "7:55", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["全民英檢初級", "全國學生美術比賽甲等", "六年級上學期成績優異"], "oth": "衛道D未錄取,明道銀盾正取", "wn": "衛道D未錄取", "mn": "明道銀盾", "note": "", "id": 76}, {"tag": "國一", "d": "3/10", "t": "8:00", "adm": "多元錄取", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["PET", "113學年度全國學生音樂比賽節奏樂隊特優 (團體)", "全民中檢中等"], "oth": "衛道錄取 (營隊C)、明道 (金盾)", "wn": "衛道C", "mn": "明道金盾", "note": "", "id": 77}, {"tag": "小六", "d": "3/10", "t": "8:04", "adm": "是 多元錄取", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "數學甲、體育甲", "camp": "銅質", "cn": "銅質", "certs": ["劍橋英檢 PET (CEFR B2)", "六上學習總成績優異", "校內書法比賽第三名"], "oth": "明道銀盾/衛道C", "wn": "衛道C", "mn": "明道銀盾", "note": "", "id": 78}, {"tag": "國一", "d": "3/10", "t": "8:05", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["六上學期總成績優異", "卓越盃語文競賽優異", "志工證書"], "oth": "衛道A錄取、明道銀盾錄取", "wn": "衛道A", "mn": "明道銀盾", "note": "", "id": 79}, {"tag": "國一", "d": "3/10", "t": "8:06", "adm": "是,多元", "an": "多元", "sch": "公小", "g5a": "本土語言甲", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["五六年級成績優異獎狀+校內五年級作文比賽第二名", "全國合唱團比賽優等", "全民中檢中級+劍橋mover"], "oth": "明道粉盾 (備取) 衛道b錄取", "wn": "衛道B", "mn": "明道粉盾備取", "note": "", "id": 80}, {"tag": "國一", "d": "3/10", "t": "8:10", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["五上五下六上學期總成績優異", "運動會五年級六年級200公尺金牌,仁仁盃游泳比賽混合四式第六,抬頭捷泳第五,曲棍球比賽 (團體) 丙組第2", "全民英檢初級初試通過"], "oth": "明道粉盾備取、衛道未考", "wn": "衛道未報考", "mn": "明道粉盾備取", "note": "", "id": 81}, {"tag": "國一", "d": "3/10", "t": "8:11", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "數學甲其他優", "camp": "銅", "cn": "銅質", "certs": ["5上5下6上學期成績優異", "KET", "校內作文第三名"], "oth": "衛道B錄取 明道銀盾錄取", "wn": "衛道B", "mn": "明道銀盾", "note": "", "id": 82}, {"tag": "小六", "d": "3/10", "t": "8:14", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "英文甲", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["全民英檢初級初試", "YAMAHA鋼琴8級", "六上學期總成績優異"], "oth": "明道銀盾/衛道A", "wn": "衛道A", "mn": "明道銀盾", "note": "", "id": 83}, {"tag": "國一+小四", "d": "3/10", "t": "8:16", "adm": "多元錄取", "an": "多元", "sch": "私校", "g5a": "全優", "g5b": "數甲其他全優", "g6a": "數甲", "camp": "銀質", "cn": "銀質", "certs": ["FCE", "台中英語劇場第二名", "國科館AI程序競賽佳作"], "oth": "衛道B正取、明道金盾正取", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 84}, {"tag": "國一+小五", "d": "3/10", "t": "8:17", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["全民英檢初級/全民中檢初級 (合併)", "中文演說優異/五年級繪畫比賽第一名 (合併)", "五年級總領域優異/六年級總領域優異/六年級期中優異 (合併)"], "oth": "衛道D未錄取/明道銀盾錄取", "wn": "衛道D未錄取", "mn": "明道銀盾", "note": "", "id": 85}, {"tag": "國一", "d": "3/10", "t": "8:20", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["六上學期總成績優異", "劍橋英檢 PET", "校內國語演講第一名"], "oth": "衛道C錄取、明道金盾錄取、明德5A菁英班錄取", "wn": "衛道C", "mn": "明道金盾", "note": "另錄取明德5A菁英班", "id": 86}, {"tag": "國一", "d": "3/10", "t": "8:28", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "本土語言甲、數位尋奇甲、其餘優", "g5b": "本土語言甲、數位尋奇甲、其餘優", "g6a": "數位尋奇甲、其餘優", "camp": "銀質獎", "cn": "銀質", "certs": ["五年級卓越盃銅質獎", "五年級普及化躲避球賽複賽第六名", "五年級國語文校內競賽合併獎狀 (演說比賽第三名、字音字型第二名、作文優等)"], "oth": "明道 (粉盾-備取)、弘文 (語文素養課程)、其他未考", "wn": "衛道未報考", "mn": "明道粉盾備取", "note": "另:弘文語文素養課程", "id": 87}, {"tag": "國一", "d": "3/10", "t": "8:28", "adm": "錄取、多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅", "cn": "銅質", "certs": ["全民英檢初級通過", "台中市音樂比賽B組笙第一名", "全國小論文優勝"], "oth": "衛道備取明道備取", "wn": "衛道備取", "mn": "明道備取", "note": "", "id": 88}, {"tag": "小六", "d": "3/10", "t": "8:29", "adm": "備取", "an": "備取", "sch": "公小", "g5a": "國語甲,其他優", "g5b": "全優", "g6a": "全優", "camp": "優良", "cn": "優良", "certs": ["劍橋英檢KET", "音樂比賽優等", "多元合併 (學校社團、幹部...等)"], "oth": "明道粉盾備取", "wn": "未提及", "mn": "明道粉盾備取", "note": "", "id": 89}, {"tag": "國一", "d": "3/10", "t": "8:56", "adm": "多元錄取", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "彈性甲,其他全優", "g6a": "全優", "camp": "銅質獎", "cn": "銅質", "certs": ["臺中市閱讀認證4000分以上合併六上學期總成績優異", "語文競賽臺中市複賽寫字優等合併全國美術比賽台中市初賽書法第三名", "多元合併 (學校社團、幹部、模範生...等)"], "oth": "未考其他學校", "wn": "衛道未報考", "mn": "明道未報考", "note": "", "id": 90}, {"tag": "國一+小三", "d": "3/10", "t": "9:44", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["113年全國學生舞蹈比賽團體甲組民俗舞優等", "113年臺中市英語歌唱比賽乙組A區第一名 (團體)", "四到六年級評量考試成績優異"], "oth": "未報考其他學校", "wn": "衛道未報考", "mn": "明道未報考", "note": "留言開頭寫「分享範例:」", "id": 91}, {"tag": "國一", "d": "3/10", "t": "10:00", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋Flyers/六上總領域優異 (合併)", "中市科展第三名/中市英語歌唱比賽第二名/校內演講比賽第二名 (合併)", "市模範生/校隊服務清單 (合併)"], "oth": "衛道B錄取。明道未報名。", "wn": "衛道B", "mn": "明道未報考", "note": "", "id": 92}, {"tag": "國一", "d": "3/10", "t": "10:33", "adm": "是 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["全民英檢初級 (初試/複試)", "六上三獎狀", "縣賽:環境知識競賽 (佳作)"], "oth": "衛道錄取 (營隊A)/明道 (金盾)/精誠 (白金)", "wn": "衛道A", "mn": "明道金盾", "note": "另錄取精誠 (白金)", "id": 93}, {"tag": "國一", "d": "3/10", "t": "10:59", "adm": "是 (曉星方案)", "an": "曉星", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["PET", "合唱全國比賽特優", "六上全領域均優"], "oth": "衛道錄取 (營隊C)、明道 (金盾)", "wn": "衛道C", "mn": "明道金盾", "note": "", "id": 94}, {"tag": "國一", "d": "3/10", "t": "11:06", "adm": "是 (多元方案)", "an": "多元", "sch": "公小", "g5a": "自甲,其它優", "g5b": "數甲,其它優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["六上期末成績優異", "校內卡片設計入選", "校外志工服務市政府獎勵獎狀"], "oth": "弘文菁英素養班 明道粉盾備取", "wn": "未提及", "mn": "明道粉盾備取", "note": "另:弘文菁英素養班", "id": 95}, {"tag": "國一", "d": "3/11", "t": "12:15", "adm": "是 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["劍橋英檢 KET (CEFR: B1)", "全國學生舞蹈比賽台中市初賽團體特優", "六上領域總成績優異"], "oth": "衛道錄取 (營隊B)、明道 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 96}, {"tag": "國一+小六", "d": "3/11", "t": "8:27", "adm": "是 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["英檢初級", "市級演說第四名", "校內學年司儀/志工服務"], "oth": "衛道錄取 (營隊B)、明道 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 97}, {"tag": "國一", "d": "3/11", "t": "10:35", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "本土語言甲 其他優", "camp": "優質", "cn": "優質", "certs": ["英檢初級", "校內美術漫畫高年級優等", "卓越盃5年級數學銅質獎"], "oth": "衛道未錄取", "wn": "衛道未錄取", "mn": "未提及", "note": "", "id": 98}, {"tag": "國一", "d": "3/11", "t": "1:47", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "數甲 其他優", "g5b": "全優", "g6a": "體育甲 其他優", "camp": "優質", "cn": "優質", "certs": ["全民英檢初級初複試通過", "校內賽跑第三 (個人)", "合併檔案:五下期末考成績優異+六上期末考成績優異+四年級總學期成績優異"], "oth": "衛道C正取,明道銀正取", "wn": "衛道C", "mn": "明道銀盾", "note": "", "id": 99}, {"tag": "國一", "d": "3/11", "t": "4:21", "adm": "是 (多元方案)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "體育甲,其他全優", "camp": "優質", "cn": "優質", "certs": ["五上下六上總成績優異", "劍橋英檢", "校內大隊接力第二"], "oth": "弘文科學素養班,華盛頓資優,新民菁英班", "wn": "未提及", "mn": "未提及", "note": "其他:弘文、華盛頓、新民", "id": 100}, {"tag": "國一", "d": "3/11", "t": "5:40", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優 (數學甲)", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["劍橋英檢KET 併全民中檢初級", "全國學生音樂全國賽合唱團體特優", "五年級上下學期、六年級上學期成績優異 (3張合併)"], "oth": "衛道B錄取", "wn": "衛道B", "mn": "未提及", "note": "", "id": 101}, {"tag": "國一", "d": "3/11", "t": "7:19", "adm": "是 (多元方案)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["五年級上下學期成績優異 (合併)", "市級繪畫優等獎", "PET"], "oth": "衛道A錄取、明道金盾", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 102}, {"tag": "國一", "d": "3/11", "t": "8:06", "adm": "是 (多元方案)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["五上下六上總成績優異", "全國美展台中市初選佳作", "台中市英語歌謠分組第三名 (團)"], "oth": "明道銀盾錄取", "wn": "未提及", "mn": "明道銀盾", "note": "", "id": 103}, {"tag": "國一", "d": "3/12", "t": "10:09", "adm": "是 (多元)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["全民中檢中級", "校內朗讀甲等", "劍橋英檢 PET"], "oth": "衛道錄取 (營隊B)、明道 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 104}, {"tag": "國一", "d": "3/12", "t": "10:22", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["校內五年級字音字形第二名", "校內六年級二百公尺第二名", "五年級上下學期、六年級上學期成績優異 (3張合併)"], "oth": "無", "wn": "衛道未報考", "mn": "明道未報考", "note": "其他學校填「無」", "id": 105}, {"tag": "國一", "d": "3/12", "t": "7:43", "adm": "是 (多元方案)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["六上七大領域", "GEPT小學英檢10個太陽/全民英檢初級聽讀", "校內母親節卡片獎狀"], "oth": "衛道中學D未錄取", "wn": "衛道D未錄取", "mn": "未提及", "note": "", "id": 106}, {"tag": "小五", "d": "3/12", "t": "9:15", "adm": "是 (多元)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["劍橋英檢PET", "中市國小英語合唱比賽冠軍", "市長盃爵士雙人舞第三名"], "oth": "衛道錄取 (B);明道錄取 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 107}, {"tag": "國一", "d": "3/12", "t": "11:20", "adm": "是 (多元方案)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["五上,五下,六上學期總成績獎狀 (合併)", "合唱團全國賽特優", "PET (B1)"], "oth": "衛道A錄取、明道金盾", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 108}, {"tag": "國一", "d": "3/13", "t": "6:45", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋英檢 PET", "校內語文競賽 國語演説第一名", "全國奧林匹克數理競賽 金質獎"], "oth": "只有報考曉明女中", "wn": "衛道未報考", "mn": "明道未報考", "note": "", "id": 109}, {"tag": "小六", "d": "3/13", "t": "11:22", "adm": "是 (曉星)", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["全民英檢初級 (初複試通過)", "校內作文第一名+臺中市兒童天地作文比賽第三名 (合併)", "臺中市環境知識賽第三名"], "oth": "衛道錄取 (A),明道錄取 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 110}, {"tag": "國一", "d": "3/13", "t": "7:40", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["全民中檢中高級", "英文劍橋PET通過", "四年級英文全學習成績第三名"], "oth": "衛道錄取 (營隊A)、明道錄取 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 111}, {"tag": "國一", "d": "3/13", "t": "7:55", "adm": "曉星", "an": "曉星", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "金質", "cn": "金質", "certs": ["劍橋英檢 Flyers", "全國鄉土歌謠比賽團體組優等", "全國學生美術比賽版畫類第三名"], "oth": "衛道錄取 (B);明道錄取 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 112}, {"tag": "國一", "d": "3/13", "t": "8:25", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["PET", "台中市科展第三名", "市級模範生/英文演講比賽第三名/各領域均優/四項校隊參與 (合併上傳)"], "oth": "衛道錄取 (營隊C)、明道 (金盾)", "wn": "衛道C", "mn": "明道金盾", "note": "", "id": 113}, {"tag": "國一", "d": "3/13", "t": "9:28", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "體育甲", "g5b": "音樂、體育甲", "g6a": "音樂甲", "camp": "銀質", "cn": "銀質", "certs": ["五年級+六年級第一名獎狀", "中文檢定初級", "學校運動會比賽團體第二名"], "oth": "衛道錄取 (營隊B)、明德5A錄取、明道未報考", "wn": "衛道B", "mn": "明道未報考", "note": "另錄取明德5A", "id": 114}, {"tag": "國一", "d": "3/13", "t": "9:42", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋KET", "校內和校外作文比賽獎狀合併", "經典檢定和藝術小天使"], "oth": "衛道B錄取、明道銀盾錄取", "wn": "衛道B", "mn": "明道銀盾", "note": "", "id": 115}, {"tag": "小六", "d": "3/14", "t": "10:35", "adm": "多元", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["英檢初級初試通過", "六上月考成績優異", "國際鋼琴檢定4級"], "oth": "衛道B錄取、明道金盾錄取", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 116}, {"tag": "小六", "d": "3/14", "t": "11:37", "adm": "錄取 (曉星方案)", "an": "曉星", "sch": "公小", "g5a": "優", "g5b": "優", "g6a": "優", "camp": "金質", "cn": "金質", "certs": ["全民英檢初級證書", "奧數競賽銀質獎", "六上學期總領域優異獎狀"], "oth": "衛道錄取 (營隊A)、明道金盾錄取", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 117}, {"tag": "國一", "d": "3/14", "t": "2:19", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銅質", "cn": "銅質", "certs": ["劍橋英檢 PET", "「2025裕元獎-全國中小學生文字創作徵文比賽」入選 (個人)", "五上、五下、六上學期全領域均優獎 (併)"], "oth": "衛道錄取 (營隊B)、明道錄取 (金盾)", "wn": "衛道B", "mn": "明道金盾", "note": "", "id": 118}, {"tag": "國一", "d": "3/16", "t": "8:53", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "數甲、其餘優", "g5b": "數甲、健甲、其餘優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["PET", "台中市音樂比賽團賽優等", "六上學期全領域成績優良"], "oth": "衛道錄取 (營隊A)、明道錄取 (金盾)", "wn": "衛道A", "mn": "明道金盾", "note": "", "id": 119}, {"tag": "國一", "d": "3/17", "t": "11:23", "adm": "是 (多元錄取)", "an": "多元", "sch": "私小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["劍橋英檢PET", "中檢中等", "校內美術比賽-優選"], "oth": "衛道備取 (營隊C)、明道錄取 (金盾)", "wn": "衛道備取", "mn": "明道金盾", "note": "", "id": 120}, {"tag": "國一", "d": "3/18", "t": "12:22", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "數學甲,其他優", "camp": "銅質", "cn": "銅質", "certs": ["五上、五下學期全領域表現優異獎 (併)", "113學年度全國民俗體育競賽女子組開叉跳一迴旋競速優等", "市模範生"], "oth": "明道錄取 (銀盾)", "wn": "未提及", "mn": "明道銀盾", "note": "", "id": 121}, {"tag": "國一", "d": "3/18", "t": "11:22", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "數學、自然甲,其他優", "g6a": "全優", "camp": "優質", "cn": "優質", "certs": ["KET、中檢初期、五上&六上學期總成績優良", "5年級校內擲遠第五名、4年級60公尺第四名", "營養小天使協助午餐工作獎狀、111-114暑期戶外探險營隊獎狀,附上為營隊烹飪、溯溪、溪降照片,以類自傳方式呈現自我的能力。(說明會時主任有說可以用類自傳呈現)"], "oth": "衛道D (未錄取)、明道 (銀盾)", "wn": "衛道D未錄取", "mn": "明道銀盾", "note": "", "id": 122}, {"tag": "國一", "d": "3/19", "t": "12:28", "adm": "是 (多元錄取)", "an": "多元", "sch": "公小", "g5a": "全優", "g5b": "全優", "g6a": "全優", "camp": "銀質", "cn": "銀質", "certs": ["114全國語文競賽台中市初賽 國語朗讀 分區第4名 (個人)", "114英語讀者劇場 甲組第一名 (團體)", "2025台中市英文菁英盃國小實用聽力能力組亞軍 (個人)"], "oth": "衛道錄取 (營隊A)、明道錄取 (金盾)、華盛頓資優申請錄取", "wn": "衛道A", "mn": "明道金盾", "note": "另錄取華盛頓資優", "id": 123}];
+DATA.forEach(r=>{ r.schn = (r.sch==="私校"?"私小":r.sch); });
+
+const state = {q:"", an:new Set(), cn:new Set(), schn:new Set(), wn:new Set(), mn:new Set()};
+
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function hl(s,q){
+  s = esc(s);
+  if(!q) return s;
+  const eq = q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  return s.replace(new RegExp(eq,"gi"),m=>`<mark>${m}</mark>`);
+}
+function hay(r){
+  return [r.tag,r.adm,r.an,r.sch,r.g5a,r.g5b,r.g6a,r.camp,r.cn,r.certs.join(" "),r.oth,r.wn,r.mn,r.note].join(" ").toLowerCase();
+}
+function filtered(){
+  const q = state.q.trim().toLowerCase();
+  return DATA.filter(r=>{
+    if(q && !hay(r).includes(q)) return false;
+    for(const k of ["an","cn","schn","wn","mn"]){
+      if(state[k].size && !state[k].has(r[k])) return false;
+    }
+    return true;
+  });
+}
+function medalCls(cn){return "m-"+(["金質","銀質","銅質","優質","優良"].includes(cn)?cn:"其他")}
+function card(r,q){
+  const id = String(r.id).padStart(3,"0");
+  return `<div class="card">
+    <div class="card-top">
+      <span class="cid">案例 ${id}</span>
+      <span class="badge b-${r.an}">${r.an==="備取"?"曉明備取":"曉明·"+r.an}</span>
+      <span class="medal ${medalCls(r.cn)}">營隊 ${esc(r.camp)}</span>
+      <span class="tag">${hl(r.tag,q)}</span>
+      <span class="tag">${r.d} ${r.t}</span>
+    </div>
+    <dl class="grid">
+      <dt>國小</dt><dd>${hl(r.sch,q)}</dd>
+      <dt>五上</dt><dd>${hl(r.g5a,q)}</dd>
+      <dt>五下</dt><dd>${hl(r.g5b,q)}</dd>
+      <dt>六上</dt><dd>${hl(r.g6a,q)}</dd>
+    </dl>
+    <div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul>
+      ${r.certs.map(c=>`<li>${hl(c,q)}</li>`).join("")}
+    </ul></dd></dl></div>
+    <div class="schools"><b>其他學校:</b>${hl(r.oth,q)}</div>
+    ${r.note?`<div class="note">※ ${hl(r.note,q)}</div>`:""}
+  </div>`;
+}
+function render(){
+  const rows = filtered();
+  document.getElementById("rescount").innerHTML =
+    `符合 <b>${rows.length}</b> / ${DATA.length} 筆`;
+  const list = document.getElementById("list");
+  list.innerHTML = rows.length
+    ? rows.map(r=>card(r,state.q.trim())).join("")
+    : `<div class="empty">找不到符合的案例,試著移除幾個篩選條件。</div>`;
+}
+function counter(arr,key){
+  const m = {};
+  arr.forEach(r=>{ m[r[key]] = (m[r[key]]||0)+1; });
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+}
+function bars(title, pairs, total){
+  return `<div class="bt">${title}</div>` + pairs.map(([k,v])=>
+    `<div class="bar"><span class="lab">${k}</span><span class="tr"><span class="fl" style="width:${(v/total*100).toFixed(1)}%"></span></span><span class="n">${v}</span></div>`).join("");
+}
+function initStats(){
+  const t = DATA.length;
+  const sb = document.getElementById("statbar");
+  const admit = counter(DATA,"an"), camp = counter(DATA,"cn");
+  sb.innerHTML = [["123","總筆數"],
+    [admit.find(x=>x[0]==="曉星")?.[1]??0,"曉星"],
+    [admit.find(x=>x[0]==="多元")?.[1]??0,"多元"],
+    [admit.find(x=>x[0]==="備取")?.[1]??0,"備取"],
+    [camp.find(x=>x[0]==="金質")?.[1]??0,"營隊金質"]]
+    .map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+  document.getElementById("statsbody").innerHTML =
+    bars("錄取方案", counter(DATA,"an"), t) +
+    bars("小百合營隊表現", counter(DATA,"cn"), t) +
+    bars("公小/私小", counter(DATA,"schn"), t) +
+    bars("衛道結果", counter(DATA,"wn"), t) +
+    bars("明道結果", counter(DATA,"mn"), t);
+}
+document.querySelectorAll(".chips").forEach(g=>{
+  g.addEventListener("click",e=>{
+    const c = e.target.closest(".chip"); if(!c) return;
+    const k = g.dataset.k, v = c.dataset.v;
+    if(state[k].has(v)){state[k].delete(v);c.classList.remove("on")}
+    else{state[k].add(v);c.classList.add("on")}
+    render();
+  });
+});
+document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render()});
+document.getElementById("clearBtn").addEventListener("click",()=>{
+  state.q=""; document.getElementById("q").value="";
+  ["an","cn","schn","wn","mn"].forEach(k=>state[k].clear());
+  document.querySelectorAll(".chip.on").forEach(c=>c.classList.remove("on"));
+  render();
+});
+// 靜態內容已內建;僅互動時重繪
+</script>
+</body>
+</html>
