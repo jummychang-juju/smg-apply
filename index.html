@@ -86,15 +86,33 @@ details.stats[open] summary::before{content:"▾ "}
 .bar .n{width:34px;flex:0 0 auto;color:var(--mut)}
 .empty{text-align:center;color:var(--mut);padding:36px 0;font-size:14px}
 .foot{font-size:11px;color:var(--mut);text-align:center;margin-top:18px;line-height:1.7}
+
+#report{scroll-margin-top:10px}
+#report section{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+#report h2{font-family:"Noto Serif TC",serif;font-size:17px;color:var(--pine-dk);margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--celadon)}
+#report h3{font-size:14px;color:var(--pine);margin:12px 0 4px}
+#report p{font-size:14px;margin-bottom:8px;line-height:1.75}
+#report ul{margin:0 0 8px 20px;font-size:14px;line-height:1.75}
+#report li{margin-bottom:4px}
+#report table{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0}
+#report th,#report td{border:1px solid var(--line);padding:5px 7px;text-align:center}
+#report th{background:var(--celadon);color:var(--pine-dk)}
+#report td:first-child{font-weight:600}
+#report b.k{color:var(--pine-dk)}
+#report .hint{font-size:12px;color:var(--mut);background:var(--celadon);border-radius:8px;padding:8px 10px;margin-top:8px}
+.rephead{font-family:"Noto Serif TC",serif;font-size:19px;color:var(--pine-dk);text-align:center;margin-top:26px;padding-top:18px;border-top:3px double var(--line)}
+.repsub{font-size:12px;color:var(--mut);text-align:center;margin-top:2px}
+.toplink{display:block;text-align:center;margin:16px auto 0;background:var(--pine);color:#fff;font-weight:700;font-size:14px;padding:11px 0;border-radius:10px;text-decoration:none}
+html{scroll-behavior:smooth}
 </style>
 </head>
 <body>
-<header><div class="wrap">
+<header id="top"><div class="wrap">
   <div class="eyebrow">曉 明 女 中 · 民 國 115 年</div>
   <h1>多元入學分享查詢系統</h1>
-  <div class="sub">123 位錄取家長留言整理 · 已匿名化 · 供學弟妹參考</div>
+  <div class="sub">資料來源:晨星真善美群組記事本蒐集到的資料<br>123 位家長留言整理(2026/3/9–3/19) · 已匿名化 · 供學弟妹參考</div>
   <div class="statbar" id="statbar"><div class="stat"><b>123</b><span>總筆數</span></div><div class="stat"><b>19</b><span>曉星</span></div><div class="stat"><b>100</b><span>多元</span></div><div class="stat"><b>4</b><span>備取</span></div><div class="stat"><b>17</b><span>營隊金質</span></div></div>
-</div></header>
+<a href="#report" onclick="var d=document.getElementById('report');d.open=true;" style="display:block;text-align:center;margin-top:10px;background:#fff;color:var(--pine-dk);font-weight:700;font-size:14px;padding:9px 0;border-radius:10px;text-decoration:none">📊 查看完整分析報告</a></div></header>
 
 <div class="wrap">
   <div class="controls">
@@ -123,7 +141,74 @@ details.stats[open] summary::before{content:"▾ "}
     </div>
   </div>
 
-  <details class="stats"><summary>統計總覽</summary><div class="statsbody" id="statsbody"><div class="bt">錄取方案</div><div class="bar"><span class="lab">多元</span><span class="tr"><span class="fl" style="width:81.3%"></span></span><span class="n">100</span></div><div class="bar"><span class="lab">曉星</span><span class="tr"><span class="fl" style="width:15.4%"></span></span><span class="n">19</span></div><div class="bar"><span class="lab">備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bt">小百合營隊表現</div><div class="bar"><span class="lab">銅質</span><span class="tr"><span class="fl" style="width:35.8%"></span></span><span class="n">44</span></div><div class="bar"><span class="lab">銀質</span><span class="tr"><span class="fl" style="width:27.6%"></span></span><span class="n">34</span></div><div class="bar"><span class="lab">優質</span><span class="tr"><span class="fl" style="width:20.3%"></span></span><span class="n">25</span></div><div class="bar"><span class="lab">金質</span><span class="tr"><span class="fl" style="width:13.8%"></span></span><span class="n">17</span></div><div class="bar"><span class="lab">優良</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bar"><span class="lab">其他</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div><div class="bt">公小/私小</div><div class="bar"><span class="lab">公小</span><span class="tr"><span class="fl" style="width:76.4%"></span></span><span class="n">94</span></div><div class="bar"><span class="lab">私小</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div><div class="bar"><span class="lab">未填</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bt">衛道結果</div><div class="bar"><span class="lab">衛道B</span><span class="tr"><span class="fl" style="width:24.4%"></span></span><span class="n">30</span></div><div class="bar"><span class="lab">衛道A</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">衛道C</span><span class="tr"><span class="fl" style="width:14.6%"></span></span><span class="n">18</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:13.0%"></span></span><span class="n">16</span></div><div class="bar"><span class="lab">衛道D未錄取</span><span class="tr"><span class="fl" style="width:8.1%"></span></span><span class="n">10</span></div><div class="bar"><span class="lab">衛道未報考</span><span class="tr"><span class="fl" style="width:8.1%"></span></span><span class="n">10</span></div><div class="bar"><span class="lab">衛道錄取(未註明)</span><span class="tr"><span class="fl" style="width:6.5%"></span></span><span class="n">8</span></div><div class="bar"><span class="lab">衛道未錄取</span><span class="tr"><span class="fl" style="width:4.1%"></span></span><span class="n">5</span></div><div class="bar"><span class="lab">衛道備取</span><span class="tr"><span class="fl" style="width:2.4%"></span></span><span class="n">3</span></div><div class="bt">明道結果</div><div class="bar"><span class="lab">明道金盾</span><span class="tr"><span class="fl" style="width:42.3%"></span></span><span class="n">52</span></div><div class="bar"><span class="lab">明道銀盾</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:17.9%"></span></span><span class="n">22</span></div><div class="bar"><span class="lab">明道未報考</span><span class="tr"><span class="fl" style="width:9.8%"></span></span><span class="n">12</span></div><div class="bar"><span class="lab">明道粉盾備取</span><span class="tr"><span class="fl" style="width:7.3%"></span></span><span class="n">9</span></div><div class="bar"><span class="lab">明道備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bar"><span class="lab">明道粉盾</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div></div></details>
+  <details class="stats"><summary>統計總覽</summary><div class="statsbody" id="statsbody"><div class="bt">錄取方案</div><div class="bar"><span class="lab">多元</span><span class="tr"><span class="fl" style="width:81.3%"></span></span><span class="n">100</span></div><div class="bar"><span class="lab">曉星</span><span class="tr"><span class="fl" style="width:15.4%"></span></span><span class="n">19</span></div><div class="bar"><span class="lab">備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bt">小百合營隊表現</div><div class="bar"><span class="lab">銅質</span><span class="tr"><span class="fl" style="width:35.8%"></span></span><span class="n">44</span></div><div class="bar"><span class="lab">銀質</span><span class="tr"><span class="fl" style="width:27.6%"></span></span><span class="n">34</span></div><div class="bar"><span class="lab">優質</span><span class="tr"><span class="fl" style="width:20.3%"></span></span><span class="n">25</span></div><div class="bar"><span class="lab">金質</span><span class="tr"><span class="fl" style="width:13.8%"></span></span><span class="n">17</span></div><div class="bar"><span class="lab">優良</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bar"><span class="lab">其他</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div><div class="bt">公小/私小</div><div class="bar"><span class="lab">公小</span><span class="tr"><span class="fl" style="width:76.4%"></span></span><span class="n">94</span></div><div class="bar"><span class="lab">私小</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div><div class="bar"><span class="lab">未填</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bt">衛道結果</div><div class="bar"><span class="lab">衛道B</span><span class="tr"><span class="fl" style="width:24.4%"></span></span><span class="n">30</span></div><div class="bar"><span class="lab">衛道A</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">衛道C</span><span class="tr"><span class="fl" style="width:14.6%"></span></span><span class="n">18</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:13.0%"></span></span><span class="n">16</span></div><div class="bar"><span class="lab">衛道D未錄取</span><span class="tr"><span class="fl" style="width:8.1%"></span></span><span class="n">10</span></div><div class="bar"><span class="lab">衛道未報考</span><span class="tr"><span class="fl" style="width:8.1%"></span></span><span class="n">10</span></div><div class="bar"><span class="lab">衛道錄取(未註明)</span><span class="tr"><span class="fl" style="width:6.5%"></span></span><span class="n">8</span></div><div class="bar"><span class="lab">衛道未錄取</span><span class="tr"><span class="fl" style="width:4.1%"></span></span><span class="n">5</span></div><div class="bar"><span class="lab">衛道備取</span><span class="tr"><span class="fl" style="width:2.4%"></span></span><span class="n">3</span></div><div class="bt">明道結果</div><div class="bar"><span class="lab">明道金盾</span><span class="tr"><span class="fl" style="width:42.3%"></span></span><span class="n">52</span></div><div class="bar"><span class="lab">明道銀盾</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:17.9%"></span></span><span class="n">22</span></div><div class="bar"><span class="lab">明道未報考</span><span class="tr"><span class="fl" style="width:9.8%"></span></span><span class="n">12</span></div><div class="bar"><span class="lab">明道粉盾備取</span><span class="tr"><span class="fl" style="width:7.3%"></span></span><span class="n">9</span></div><div class="bar"><span class="lab">明道備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bar"><span class="lab">明道粉盾</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div></div></details><details class="stats" id="report"><summary>📊 完整分析報告(八大面向,點開閱讀)</summary><div class="statsbody">
+
+
+<section><h2>一、樣本輪廓</h2>
+<p>本報告分析 <b class="k">123 筆</b>家長留言(2026/3/9–3/19),全部為有結果的實際案例:曉星 <b class="k">19</b>、多元 <b class="k">100</b>、備取 <b class="k">4</b>。留言來自已錄取家長回饋,因此<b>看不到「曉明未錄取」的樣本</b>,解讀時要記得這個先天限制——它能告訴你「錄取者長什麼樣子」,不能直接推算錄取率。</p>
+<div class="bar"><span class="lab">多元</span><span class="tr"><span class="fl" style="width:81.3%"></span></span><span class="n">100</span></div><div class="bar"><span class="lab">曉星</span><span class="tr"><span class="fl" style="width:15.4%"></span></span><span class="n">19</span></div><div class="bar"><span class="lab">備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div>
+<h3>公小/私小</h3>
+<div class="bar"><span class="lab">公小</span><span class="tr"><span class="fl" style="width:76.4%"></span></span><span class="n">94</span></div><div class="bar"><span class="lab">私小</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div><div class="bar"><span class="lab">未填</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div>
+<p>公小 94 位(76%)、私小 27 位(22%)。公小生佔絕對多數,顯示<b>不需要唸私小才能上曉明</b>;私小比例(約 1/5)也高於一般人口比例,兩條路都走得通。</p></section>
+
+<section><h2>二、校內成績(60%)怎麼看</h2>
+<p>三學期(五上、五下、六上)<b>全優</b>者 72 位(59%);其餘 51 位(41%)<b>至少有一科「甲」仍然錄取</b>,常見是體育、本土語、音樂、數學單科甲。</p>
+<ul>
+<li>曉星 19 位中有 17 位三學期全優,只有 2 位帶甲——<b>想走曉星,成績單幾乎要全優</b>。</li>
+<li>多元錄取者帶甲比例將近一半(100 位中 48 位)——<b>一兩科甲不是淘汰門檻</b>,不用因此放棄報名。</li>
+<li>連「三學期各有多科甲」的案例(如全學期數學甲)也有多元錄取紀錄,推測 40% 的多元證明有拉回空間。</li>
+</ul></section>
+
+<section><h2>三、小百合營隊表現 × 錄取方案</h2>
+<table><tr><th>營隊表現</th><th>人數</th><th>曉星</th><th>多元</th><th>備取</th></tr>
+<tr><td>金質</td><td>17</td><td>15</td><td>2</td><td>0</td></tr><tr><td>銀質</td><td>34</td><td>4</td><td>30</td><td>0</td></tr><tr><td>銅質</td><td>44</td><td>0</td><td>44</td><td>0</td></tr><tr><td>優質</td><td>25</td><td>0</td><td>23</td><td>2</td></tr><tr><td>優良</td><td>2</td><td>0</td><td>0</td><td>2</td></tr><tr><td>其他</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+</table>
+<p>這是全份資料<b>最強的訊號</b>:金質 17 位中 <b class="k">15 位走曉星</b>(88%);曉星 19 位中 15 位是金質、4 位是銀質,<b>沒有銅質以下拿到曉星的案例</b>。銅質與優質則全數走多元或備取。營隊表現幾乎直接決定入學方案等級,<b>小百合營隊值得認真準備</b>。</p>
+<div class="hint">留言中 1 位營隊寫「銀盾」照原文登載(歸入「其他」);「優質/優良」推測為同級的不同寫法,本表按原文分列。</div></section>
+
+<section><h2>四、英語檢定分布</h2>
+<div class="bar"><span class="lab">CAE (C1)</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div><div class="bar"><span class="lab">FCE (B2)</span><span class="tr"><span class="fl" style="width:2.4%"></span></span><span class="n">3</span></div><div class="bar"><span class="lab">全民英檢中級</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bar"><span class="lab">PET (B1–B2)</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div><div class="bar"><span class="lab">KET (A2)</span><span class="tr"><span class="fl" style="width:14.6%"></span></span><span class="n">18</span></div><div class="bar"><span class="lab">小托福/TOEFL</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bar"><span class="lab">Flyers</span><span class="tr"><span class="fl" style="width:5.7%"></span></span><span class="n">7</span></div><div class="bar"><span class="lab">Movers</span><span class="tr"><span class="fl" style="width:1.6%"></span></span><span class="n">2</span></div><div class="bar"><span class="lab">全民英檢初級</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div><div class="bar"><span class="lab">小學英檢</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bar"><span class="lab">英檢(未註明級別)</span><span class="tr"><span class="fl" style="width:2.4%"></span></span><span class="n">3</span></div><div class="bar"><span class="lab">留言未提及英檢</span><span class="tr"><span class="fl" style="width:22.0%"></span></span><span class="n">27</span></div>
+<p>123 位中有 <b class="k">96</b> 位(78%)在多元證明放了英語檢定,是最普遍的一張證明。主流是<b>全民英檢初級</b>與<b>劍橋 KET/PET</b>;有 PET 以上(含 FCE、CAE、英檢中級)約 33 位。但注意:<b>沒有英檢也照樣有錄取案例</b>(27 位留言未提及英檢,其中含曉星),競賽或成績獎狀同樣被接受。</p></section>
+
+<section><h2>五、多元證明的組成策略</h2>
+<div class="bar"><span class="lab">英語檢定</span><span class="tr"><span class="fl" style="width:77.2%"></span></span><span class="n">95</span></div><div class="bar"><span class="lab">成績優異獎狀</span><span class="tr"><span class="fl" style="width:53.7%"></span></span><span class="n">66</span></div><div class="bar"><span class="lab">語文類</span><span class="tr"><span class="fl" style="width:43.9%"></span></span><span class="n">54</span></div><div class="bar"><span class="lab">音樂類</span><span class="tr"><span class="fl" style="width:32.5%"></span></span><span class="n">40</span></div><div class="bar"><span class="lab">幹部服務/模範生</span><span class="tr"><span class="fl" style="width:25.2%"></span></span><span class="n">31</span></div><div class="bar"><span class="lab">中文檢定</span><span class="tr"><span class="fl" style="width:21.1%"></span></span><span class="n">26</span></div><div class="bar"><span class="lab">數理科學</span><span class="tr"><span class="fl" style="width:19.5%"></span></span><span class="n">24</span></div><div class="bar"><span class="lab">美術類</span><span class="tr"><span class="fl" style="width:13.0%"></span></span><span class="n">16</span></div><div class="bar"><span class="lab">體育舞蹈</span><span class="tr"><span class="fl" style="width:12.2%"></span></span><span class="n">15</span></div>
+<p>從 123 位的三格證明欄可以歸納出常見組合:<b>「一張英檢 + 一張競賽/才藝 + 一張成績優異獎狀」</b>是最典型的鐵三角。另外有 <b class="k">33 位</b>(27%)明確使用「<b>多張獎狀合併成一張上傳</b>」策略(有家長註明曾電話向教務處確認可行),等於在三格限制裡塞進更多素材——這是留言中最實用的實戰技巧之一。</p>
+<ul>
+<li>競賽不限市級以上:校內演講、校內作文、校內美術得名都大量出現。</li>
+<li>幹部、模範生、志工、司儀等服務類證明有 31 位使用,通常放第三格或合併。</li>
+<li>特殊才藝(輕艇、曲棍球、民俗舞、發明展、鋼琴國際賽)也都有錄取案例,不必侷限學科。</li>
+</ul></section>
+
+<section><h2>六、與衛道、明道的交叉結果</h2>
+<h3>營隊表現 × 衛道結果</h3>
+<table><tr><th>營隊</th><th>衛道錄取</th><th>備取</th><th>未錄取</th><th>未報考/未提</th></tr>
+<tr><td>金質</td><td>17</td><td>0</td><td>0</td><td>0</td></tr><tr><td>銀質</td><td>23</td><td>1</td><td>5</td><td>5</td></tr><tr><td>銅質</td><td>24</td><td>2</td><td>7</td><td>11</td></tr><tr><td>優質</td><td>13</td><td>0</td><td>3</td><td>9</td></tr><tr><td>優良</td><td>1</td><td>0</td><td>0</td><td>1</td></tr><tr><td>其他</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+</table>
+<p>營隊<b>金質者報考衛道全數錄取</b>(17/17,多為 A、B 班);銀質以下開始出現 D(未錄取)案例。兩校的評量結果高度相關,曉明營隊表現好的孩子,在衛道也普遍拿到好結果。</p>
+<h3>明道結果</h3>
+<div class="bar"><span class="lab">明道金盾</span><span class="tr"><span class="fl" style="width:42.3%"></span></span><span class="n">52</span></div><div class="bar"><span class="lab">明道銀盾</span><span class="tr"><span class="fl" style="width:18.7%"></span></span><span class="n">23</span></div><div class="bar"><span class="lab">未提及</span><span class="tr"><span class="fl" style="width:17.9%"></span></span><span class="n">22</span></div><div class="bar"><span class="lab">明道未報考</span><span class="tr"><span class="fl" style="width:9.8%"></span></span><span class="n">12</span></div><div class="bar"><span class="lab">明道粉盾備取</span><span class="tr"><span class="fl" style="width:7.3%"></span></span><span class="n">9</span></div><div class="bar"><span class="lab">明道備取</span><span class="tr"><span class="fl" style="width:3.3%"></span></span><span class="n">4</span></div><div class="bar"><span class="lab">明道粉盾</span><span class="tr"><span class="fl" style="width:0.8%"></span></span><span class="n">1</span></div>
+<p>報考明道且留言有寫結果者中,金盾 52 位、銀盾 23 位、粉盾/備取 14 位。曉星 19 位中 <b class="k">15 位同時拿到明道金盾</b>——頂端學生在各校結果一致。也有約 1/4 的家庭只報曉明或未報他校。</p>
+<div class="hint">部分留言另提到弘文、明德5A、精誠、華盛頓、東大附、立人科學班等錄取結果,已登載於各案例「其他學校」欄,可在查詢系統搜尋。</div></section>
+
+<section><h2>七、給學弟妹家長的重點整理</h2>
+<ul>
+<li><b>成績面:</b>以全優為目標,但一兩科甲(尤其體育、本土語、音樂)不影響多元錄取的機會,別因此棄報。</li>
+<li><b>營隊面:</b>小百合營隊是分方案的關鍵,金質幾乎等於曉星門票,建議提早了解營隊評量方式並認真參與。</li>
+<li><b>證明面:</b>英檢(初級或 KET/PET)+ 競賽 + 成績獎狀是標準配置;獎狀多的話,先向教務處電話確認後採「合併上傳」。</li>
+<li><b>低年級就能準備:</b>樣本中有小三、小四家長回報(以在校年級標記),獎狀從四年級起都有人放,證明可以提早累積。</li>
+<li><b>多校並報:</b>大多數家庭同時報衛道/明道,結果高度相關;若曉明備取,案例顯示仍常有衛道正取、明道銀盾以上可作備案。</li>
+</ul></section>
+
+<section><h2>八、資料限制與注意事項</h2>
+<ul>
+<li>樣本為<b>錄取者自願留言</b>,存在倖存者偏差,無法推估整體錄取率或落點。</li>
+<li>成績、獎項均照家長原文登載,未經校方核實;2 筆公/私小未填、1 筆營隊寫法特殊,均照原樣保留。</li>
+<li>各校招生制度每年可能調整,本分析僅反映 115 年這一屆的樣態。</li>
+</ul></section>
+
+
+
+</div></details>
 
   <div class="rescount" id="rescount">符合 <b>123</b> / 123 筆</div>
   <div id="list"><div class="card">
@@ -619,7 +704,8 @@ details.stats[open] summary::before{content:"▾ "}
 <dl class="grid"><dt>國小</dt><dd>公小</dd><dt>五上</dt><dd>全優</dd><dt>五下</dt><dd>全優</dd><dt>六上</dt><dd>全優</dd></dl>
 <div class="certs"><dl class="grid"><dt>多元<br>證明</dt><dd><ul><li>114全國語文競賽台中市初賽 國語朗讀 分區第4名 (個人)</li><li>114英語讀者劇場 甲組第一名 (團體)</li><li>2025台中市英文菁英盃國小實用聽力能力組亞軍 (個人)</li></ul></dd></dl></div>
 <div class="schools"><b>其他學校:</b>衛道錄取 (營隊A)、明道錄取 (金盾)、華盛頓資優申請錄取</div><div class="note">※ 另錄取華盛頓資優</div></div></div>
-  <div class="foot">資料來源:115年入學家長 LINE 記事本留言 123 則(2026/3/9–3/19)<br>
+  
+<div class="foot">
   已去識別化;成績與獎項均照原文登載,空白處標示「未填」,未經補寫。<br>各校制度年年可能調整,本資料僅供方向參考。</div>
 </div>
 
